@@ -5,7 +5,11 @@
             "latitude": "11.5704444444444",
             "longitude": "104.905083333333",
             "title": "PTT Station Neak Vorn",
-            "description": null,
+            "description": [
+                "Amazon",
+                "7-Eleven",
+                "Otr"
+            ],
             "product": [
                 "ULG 95",
                 "ULR 91",
