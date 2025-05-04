@@ -176,8 +176,10 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Station</th>
+<!--                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>-->
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Services</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Province</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
@@ -271,10 +273,7 @@
                                 <input id="onion" name="other_product[]" type="checkbox" value="Onion" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="onion" class="ml-2 block text-sm text-gray-700">Onion</label>
                             </div>
-                            <div class="flex items-center">
-                                <input id="otr" name="other_product[]" type="checkbox" value="Otr" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
-                                <label for="otr" class="ml-2 block text-sm text-gray-700">Otteri</label>
-                            </div>
+
                         </div>
                     </div>
 
@@ -288,6 +287,10 @@
                             <div class="flex items-center">
                                 <input id="7eleven" name="description[]" type="checkbox" value="7-Eleven" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="7eleven" class="ml-2 block text-sm text-gray-700">7-Eleven</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="otr" name="description[]" type="checkbox" value="Otr" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="otr" class="ml-2 block text-sm text-gray-700">Otteri</label>
                             </div>
                         </div>
                     </div>
@@ -407,10 +410,7 @@
                                 <input id="edit-onion" name="other_product[]" type="checkbox" value="Onion" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-onion" class="ml-2 block text-sm text-gray-700">Onion</label>
                             </div>
-                            <div class="flex items-center">
-                                <input id="edit-otr" name="other_product[]" type="checkbox" value="Otr" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
-                                <label for="edit-otr" class="ml-2 block text-sm text-gray-700">Otteri</label>
-                            </div>
+
                         </div>
                     </div>
 
@@ -424,6 +424,10 @@
                             <div class="flex items-center">
                                 <input id="edit-7eleven" name="description[]" type="checkbox" value="7-Eleven" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-7eleven" class="ml-2 block text-sm text-gray-700">7-Eleven</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-otr" name="description[]" type="checkbox" value="Otr" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-otr" class="ml-2 block text-sm text-gray-700">Otteri</label>
                             </div>
                         </div>
                     </div>
@@ -868,17 +872,62 @@
                     "className": "px-6 py-4 whitespace-nowrap text-sm text-gray-500"
                 },
                 {
-                    "data": "product",
+                    "data": "other_product",
                     "className": "px-6 py-4 text-sm text-gray-500",
                     "render": function(data) {
-                        return data ? data.join(', ') : 'N/A';
+                        if (!data || data.length === 0) return 'N/A';
+
+                        // Define color classes for different products
+                        const colorMap = {
+                            'EV': 'bg-purple-100 text-purple-800',
+                            'Onion': 'bg-orange-100 text-orange-800'
+                            // Add more mappings as needed
+                        };
+
+                        return data.map(item => {
+                            const colorClass = colorMap[item] || 'bg-gray-100 text-gray-800';
+                            return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass} mr-1 mb-1">${item}</span>`;
+                        }).join('');
                     }
                 },
                 {
                     "data": "description",
                     "className": "px-6 py-4 text-sm text-gray-500",
                     "render": function(data) {
-                        return data ? data.join(', ') : 'N/A';
+                        if (!data || data.length === 0) return 'N/A';
+
+                        // Define color classes for different items in description
+                        const colorMap = {
+                            'Amazon': 'bg-purple-100 text-purple-800',
+                            '7-Eleven': 'bg-orange-100 text-orange-800',
+                            'Otr': 'bg-teal-100 text-teal-800'
+                            // Add more mappings as needed
+                        };
+
+                        return data.map(item => {
+                            const colorClass = colorMap[item] || 'bg-gray-100 text-gray-800';
+                            return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass} mr-1 mb-1">${item}</span>`;
+                        }).join('');
+                    }
+                },
+                {
+                    "data": "service",
+                    "className": "px-6 py-4 text-sm text-gray-500",
+                    "render": function(data) {
+                        if (!data || data.length === 0) return 'N/A';
+
+                        // Define color classes for different payment methods
+                        const colorMap = {
+                            'Fleet card': 'bg-indigo-100 text-indigo-800',
+                            'KHQR': 'bg-green-100 text-green-800',
+                            'Cash': 'bg-yellow-100 text-yellow-800',
+                            // Add more mappings as needed
+                        };
+
+                        return data.map(item => {
+                            const colorClass = colorMap[item] || 'bg-gray-100 text-gray-800';
+                            return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colorClass} mr-1 mb-1">${item}</span>`;
+                        }).join('');
                     }
                 },
                 {

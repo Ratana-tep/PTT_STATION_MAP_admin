@@ -5,26 +5,27 @@
             "latitude": "11.5704444444444",
             "longitude": "104.905083333333",
             "title": "PTT Station Neak Vorn",
-            "description": [
-                "Amazon"
-            ],
+            "description": null,
             "product": [
                 "ULG 95",
                 "ULR 91",
                 "HSD"
             ],
             "other_product": [
-                "EV"
+                "EV",
+                "Onion"
             ],
             "service": [
-                "Fleet card"
+                "Fleet card",
+                "KHQR",
+                "Cash"
             ],
             "province": "Phnom Penh",
             "address": "Russian Federation Blvd (St.110), Sangkat Srah Chak, Khan Doun Penh, Cambodia",
             "status": "24h",
             "promotion": null,
-            "old_picture": "Screenshot 2025-05-02 090522.png",
-            "picture": "Screenshot 2025-05-02 090522.png"
+            "old_picture": "2.png",
+            "picture": "2.png"
         },
         {
             "id": 603,
@@ -418,7 +419,7 @@
             ],
             "province": "Phnom Penh",
             "address": "#4818, St 1003, Bonla Swet Village, Sangkat Khmough, Khan Sen Sok, Phnom Penh",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
@@ -653,7 +654,6 @@
             ],
             "other_product": [],
             "service": [
-                "Fleet card",
                 "KHQR",
                 "Cash"
             ],
@@ -4250,7 +4250,8 @@
             ],
             "service": [
                 "Cash",
-                "KHQR"
+                "KHQR",
+                "Fleet card"
             ],
             "province": "Phnom Penh",
             "address": "located at street 351 (Trong Morn),\u00e2\u20ac\u2039 Ta Ngov Village, Sangkat Nirouth, \nKhan Chbar Ampov, Phnom Penh",
@@ -4285,7 +4286,7 @@
             ],
             "province": "Kampot",
             "address": "located at National Road 3, Kep Thmey Village, Sangkat Boeung Touk, Bokor Municipal, \nKampot Province",
-            "status": "16h",
+            "status": "24h",
             "promotion": [
                 ""
             ],
