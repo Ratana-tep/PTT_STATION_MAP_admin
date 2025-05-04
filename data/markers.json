@@ -6,9 +6,7 @@
             "longitude": "104.905083333333",
             "title": "PTT Station Neak Vorn",
             "description": [
-                "Amazon",
-                "7-Eleven",
-                "Otr"
+                "Amazon"
             ],
             "product": [
                 "ULG 95",
@@ -19,16 +17,14 @@
                 "EV"
             ],
             "service": [
-                "Fleet card",
-                "KHQR",
-                "Cash"
+                "Fleet card"
             ],
             "province": "Phnom Penh",
             "address": "Russian Federation Blvd (St.110), Sangkat Srah Chak, Khan Doun Penh, Cambodia",
             "status": "24h",
-            "promotion": [],
-            "old_picture": "2.png",
-            "picture": "2.png"
+            "promotion": null,
+            "old_picture": "Screenshot 2025-05-02 090522.png",
+            "picture": "Screenshot 2025-05-02 090522.png"
         },
         {
             "id": 603,
@@ -110,7 +106,6 @@
             "other_product": [
                 "EV",
                 "Onion"
-
             ],
             "service": [
                 "Fleet card",
@@ -1439,7 +1434,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-
             ],
             "province": "Phnom Penh",
             "address": "No. 3+4, St. Oknha Tep Phan, Sangkat Boeng Keng Kang 1, Khan Chamkar Morn, Phnom Penh",
@@ -2039,7 +2033,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-
             ],
             "province": "Battambang",
             "address": "National road 5, O\u00e2\u20ac\u2122char village, Sangkat O\u00e2\u20ac\u2122char, Khan Battombong, Battombong province",
@@ -2130,7 +2123,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-
             ],
             "province": "Battambang",
             "address": "National road 5, Bek Chan village, Sangkat Preh Sdach, \nKhan Battombong, Battombong province\n",
@@ -2340,8 +2332,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-
-
             ],
             "province": "Phnom Penh",
             "address": "129, St 592, Corner St.317, Phum 5, Sangkat Boeungkok 2, Khan Toul Kork, Phnom Penh",
@@ -2372,7 +2362,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-
             ],
             "province": "Phnom Penh",
             "address": "#120,St Pastor,Phum 4, Sangkat Chaktoumouk, Khan Doun Penh, Phnom Penh.",
@@ -2823,7 +2812,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-
             ],
             "province": "Phnom Penh",
             "address": "# 19971 Corner Raod 199, Sangkat Olympic, Khan Chamka Morn, Phnom Penh City",
@@ -3003,7 +2991,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-
             ],
             "province": "Phnom Penh",
             "address": "Phum Kien Khlang, Sangkat Chroychangva, Khan Chroychangva   Phnom Penh",
@@ -3663,7 +3650,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-
             ],
             "province": "Takeo",
             "address": "National Road 3, Taleu village, Udomsorya commune, Tramkok district, Takeo province",
@@ -5239,7 +5225,6 @@
             "description": [
                 "Amazon",
                 "7-Eleven"
-
             ],
             "product": [
                 "ULG 95",
@@ -5283,7 +5268,6 @@
                 "Cash",
                 "KHQR",
                 "Fleet card"
-
             ],
             "province": "Pursat",
             "address": "# Plot land No.42, National Road No.05, Krapeu Rou Village, Snam Preah Commune, Bakan District , Pursat Province, Cambodia.",
