@@ -105,12 +105,12 @@
             padding-top: 0.75rem;
         }
 
-             /* ... existing styles ... */
-         #map-container {
-             width: 100%;
-             height: 400px;
-             position: relative;
-         }
+        /* ... existing styles ... */
+        #map-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+        }
 
     </style>
 </head>
@@ -124,15 +124,18 @@
         </div>
         <nav class="mt-6">
             <div class="px-4 space-y-1">
-                <a href="index.php" class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-blue-100 hover:text-white hover:bg-blue-700 transition-colors duration-200">
+                <a href="index.php"
+                   class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-blue-100 hover:text-white hover:bg-blue-700 transition-colors duration-200">
                     <span class="material-icons mr-3">dashboard</span>
                     <span class="opacity-100 group-hover:opacity-100">Overview</span>
                 </a>
-                <a href="manage.php" class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-blue-100 hover:text-white hover:bg-blue-700 transition-colors duration-200">
+                <a href="manage.php"
+                   class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-blue-100 hover:text-white hover:bg-blue-700 transition-colors duration-200">
                     <span class="material-icons mr-3">campaign</span>
                     <span class="opacity-100 group-hover:opacity-100">Marketing</span>
                 </a>
-                <a href="station_admin.php" class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
+                <a href="station_admin.php"
+                   class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200">
                     <span class="material-icons mr-3">local_gas_station</span>
                     <span class="opacity-100 group-hover:opacity-100">Stations</span>
                 </a>
@@ -160,7 +163,9 @@
         <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
             <!-- Add Station Button -->
             <div class="animate-slide-in-right mb-8">
-                <button type="button" class="btn-hover-effect bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-lg shadow-md flex items-center" data-bs-toggle="modal" data-bs-target="#addStationModal">
+                <button type="button"
+                        class="btn-hover-effect bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-lg shadow-md flex items-center"
+                        data-bs-toggle="modal" data-bs-target="#addStationModal">
                     <i class="fas fa-plus-circle mr-2"></i> Add New Station
                 </button>
             </div>
@@ -173,17 +178,47 @@
                         <table id="stations-table" class="min-w-full divide-y divide-gray-200 stripe hover">
                             <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Station</th>
-<!--                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>-->
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Services</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Province</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    ID
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Location
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Station
+                                </th>
+                                <!--                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>-->
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Products
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Services
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Payment
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Province
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Image
+                                </th>
+                                <th scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions
+                                </th>
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -198,36 +233,44 @@
 </div>
 
 <!-- Add Station Modal -->
-<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="addStationModal" tabindex="-1" aria-labelledby="addStationModalLabel" aria-hidden="true">
+<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+     id="addStationModal" tabindex="-1" aria-labelledby="addStationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg relative w-auto pointer-events-none my-6 mx-auto max-w-4xl">
         <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
             <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-gradient-to-r from-blue-500 to-blue-600">
                 <h5 class="text-xl font-medium leading-normal text-white" id="addStationModalLabel">Add New Station</h5>
-                <button type="button" class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button"
+                        class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline"
+                        data-bs-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body relative p-6 overflow-y-auto max-h-[80vh]">
-                <form id="station-form" method="POST" action="marker-interface.php" enctype="multipart/form-data" class="space-y-4">
+                <form id="station-form" method="POST" action="marker-interface.php" enctype="multipart/form-data"
+                      class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="id" class="block text-sm font-medium text-gray-700 mb-1">Station ID</label>
-                            <input type="text" id="id" name="id" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <input type="text" id="id" name="id" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                         </div>
                         <div>
                             <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Station Name</label>
-                            <input type="text" id="title" name="title" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <input type="text" id="title" name="title" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                         </div>
                         <div>
                             <label for="province" class="block text-sm font-medium text-gray-700 mb-1">Province</label>
-                            <select id="province" name="province" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <select id="province" name="province" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                                 <option value="" selected disabled>Select Province</option>
                                 <!-- Options will be populated by JavaScript -->
                             </select>
                         </div>
                         <div>
                             <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select id="status" name="status" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <select id="status" name="status" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                                 <option value="" selected disabled>Select Status</option>
                                 <option value="16h">⏰ 16 Hours</option>
                                 <option value="24h">⏰ 24 Hours</option>
@@ -236,11 +279,14 @@
                         </div>
                         <div>
                             <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
-                            <input type="text" id="latitude" name="latitude" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <input type="text" id="latitude" name="latitude" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                         </div>
                         <div>
-                            <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
-                            <input type="text" id="longitude" name="longitude" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <label for="longitude"
+                                   class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                            <input type="text" id="longitude" name="longitude" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                         </div>
                     </div>
 
@@ -248,15 +294,18 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Products</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             <div class="flex items-center">
-                                <input id="ulg95" name="product[]" type="checkbox" value="ULG 95" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="ulg95" name="product[]" type="checkbox" value="ULG 95"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="ulg95" class="ml-2 block text-sm text-gray-700">ULG 95</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="ulr91" name="product[]" type="checkbox" value="ULR 91" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="ulr91" name="product[]" type="checkbox" value="ULR 91"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="ulr91" class="ml-2 block text-sm text-gray-700">ULR 91</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="hsd" name="product[]" type="checkbox" value="HSD" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="hsd" name="product[]" type="checkbox" value="HSD"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="hsd" class="ml-2 block text-sm text-gray-700">HSD</label>
                             </div>
                         </div>
@@ -266,11 +315,13 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Other Products</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             <div class="flex items-center">
-                                <input id="ev" name="other_product[]" type="checkbox" value="EV" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="ev" name="other_product[]" type="checkbox" value="EV"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="ev" class="ml-2 block text-sm text-gray-700">EV</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="onion" name="other_product[]" type="checkbox" value="Onion" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="onion" name="other_product[]" type="checkbox" value="Onion"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="onion" class="ml-2 block text-sm text-gray-700">Onion</label>
                             </div>
 
@@ -281,15 +332,18 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Services</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             <div class="flex items-center">
-                                <input id="amazon" name="description[]" type="checkbox" value="Amazon" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="amazon" name="description[]" type="checkbox" value="Amazon"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="amazon" class="ml-2 block text-sm text-gray-700">Amazon</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="7eleven" name="description[]" type="checkbox" value="7-Eleven" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="7eleven" name="description[]" type="checkbox" value="7-Eleven"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="7eleven" class="ml-2 block text-sm text-gray-700">7-Eleven</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="otr" name="description[]" type="checkbox" value="Otr" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="otr" name="description[]" type="checkbox" value="Otr"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="otr" class="ml-2 block text-sm text-gray-700">Otteri</label>
                             </div>
                         </div>
@@ -299,15 +353,18 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Payment Methods</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             <div class="flex items-center">
-                                <input id="fleetcard" name="service[]" type="checkbox" value="Fleet card" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="fleetcard" name="service[]" type="checkbox" value="Fleet card"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="fleetcard" class="ml-2 block text-sm text-gray-700">Fleet Card</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="aba" name="service[]" type="checkbox" value="KHQR" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="aba" name="service[]" type="checkbox" value="KHQR"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="aba" class="ml-2 block text-sm text-gray-700">KHQR</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="test" name="service[]" type="checkbox" value="Cash" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="test" name="service[]" type="checkbox" value="Cash"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="test" class="ml-2 block text-sm text-gray-700">Cash</label>
                             </div>
                         </div>
@@ -315,19 +372,27 @@
 
                     <div>
                         <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                        <input type="text" id="address" name="address" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                        <input type="text" id="address" name="address" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                     </div>
 
                     <div>
                         <label for="picture" class="block text-sm font-medium text-gray-700 mb-1">Station Image</label>
                         <div class="mt-1 flex items-center">
-                            <input type="file" id="picture" name="picture" class="block w-full text-sm text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            <input type="file" id="picture" name="picture"
+                                   class="block w-full text-sm text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         </div>
                     </div>
 
                     <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
-                        <button type="button" class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn-hover-effect px-4 py-2 bg-blue-600 text-white text-xs font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out ml-2">Add Station</button>
+                        <button type="button"
+                                class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out"
+                                data-bs-dismiss="modal">Close
+                        </button>
+                        <button type="submit"
+                                class="btn-hover-effect px-4 py-2 bg-blue-600 text-white text-xs font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out ml-2">
+                            Add Station
+                        </button>
                     </div>
                 </form>
             </div>
@@ -336,35 +401,44 @@
 </div>
 
 <!-- Edit Station Modal -->
-<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="editStationModal" tabindex="-1" aria-labelledby="editStationModalLabel" aria-hidden="true">
+<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+     id="editStationModal" tabindex="-1" aria-labelledby="editStationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg relative w-auto pointer-events-none my-6 mx-auto max-w-4xl">
         <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
             <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-gradient-to-r from-blue-500 to-blue-600">
                 <h5 class="text-xl font-medium leading-normal text-white" id="editStationModalLabel">Edit Station</h5>
-                <button type="button" class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button"
+                        class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline"
+                        data-bs-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body relative p-6 overflow-y-auto max-h-[80vh]">
-                <form id="edit-station-form" method="POST" action="marker-interface.php" enctype="multipart/form-data" class="space-y-4">
+                <form id="edit-station-form" method="POST" action="marker-interface.php" enctype="multipart/form-data"
+                      class="space-y-4">
                     <input type="hidden" id="edit-id" name="id">
                     <input type="hidden" id="old-picture" name="old_picture">
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="edit-title" class="block text-sm font-medium text-gray-700 mb-1">Station Name</label>
-                            <input type="text" id="edit-title" name="title" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <label for="edit-title" class="block text-sm font-medium text-gray-700 mb-1">Station
+                                Name</label>
+                            <input type="text" id="edit-title" name="title" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                         </div>
                         <div>
-                            <label for="edit-province" class="block text-sm font-medium text-gray-700 mb-1">Province</label>
-                            <select id="edit-province" name="province" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <label for="edit-province"
+                                   class="block text-sm font-medium text-gray-700 mb-1">Province</label>
+                            <select id="edit-province" name="province" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                                 <option value="" selected disabled>Select Province</option>
                                 <!-- Options will be populated by JavaScript -->
                             </select>
                         </div>
                         <div>
                             <label for="edit-status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                            <select id="edit-status" name="status" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <select id="edit-status" name="status" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                                 <option value="" selected disabled>Select Status</option>
                                 <option value="16h">⏰ 16 Hours</option>
                                 <option value="24h">⏰ 24 Hours</option>
@@ -372,12 +446,16 @@
                             </select>
                         </div>
                         <div>
-                            <label for="edit-latitude" class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
-                            <input type="text" id="edit-latitude" name="latitude" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <label for="edit-latitude"
+                                   class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                            <input type="text" id="edit-latitude" name="latitude" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                         </div>
                         <div>
-                            <label for="edit-longitude" class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
-                            <input type="text" id="edit-longitude" name="longitude" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                            <label for="edit-longitude"
+                                   class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                            <input type="text" id="edit-longitude" name="longitude" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                         </div>
                     </div>
 
@@ -385,15 +463,18 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Products</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             <div class="flex items-center">
-                                <input id="edit-ulg95" name="product[]" type="checkbox" value="ULG 95" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-ulg95" name="product[]" type="checkbox" value="ULG 95"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-ulg95" class="ml-2 block text-sm text-gray-700">ULG 95</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="edit-ulr91" name="product[]" type="checkbox" value="ULR 91" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-ulr91" name="product[]" type="checkbox" value="ULR 91"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-ulr91" class="ml-2 block text-sm text-gray-700">ULR 91</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="edit-hsd" name="product[]" type="checkbox" value="HSD" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-hsd" name="product[]" type="checkbox" value="HSD"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-hsd" class="ml-2 block text-sm text-gray-700">HSD</label>
                             </div>
                         </div>
@@ -403,11 +484,13 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Other Products</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             <div class="flex items-center">
-                                <input id="edit-ev" name="other_product[]" type="checkbox" value="EV" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-ev" name="other_product[]" type="checkbox" value="EV"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-ev" class="ml-2 block text-sm text-gray-700">EV</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="edit-onion" name="other_product[]" type="checkbox" value="Onion" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-onion" name="other_product[]" type="checkbox" value="Onion"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-onion" class="ml-2 block text-sm text-gray-700">Onion</label>
                             </div>
 
@@ -418,15 +501,18 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Services</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             <div class="flex items-center">
-                                <input id="edit-amazon" name="description[]" type="checkbox" value="Amazon" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-amazon" name="description[]" type="checkbox" value="Amazon"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-amazon" class="ml-2 block text-sm text-gray-700">Amazon</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="edit-7eleven" name="description[]" type="checkbox" value="7-Eleven" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-7eleven" name="description[]" type="checkbox" value="7-Eleven"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-7eleven" class="ml-2 block text-sm text-gray-700">7-Eleven</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="edit-otr" name="description[]" type="checkbox" value="Otr" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-otr" name="description[]" type="checkbox" value="Otr"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-otr" class="ml-2 block text-sm text-gray-700">Otteri</label>
                             </div>
                         </div>
@@ -436,15 +522,18 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Payment Methods</label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                             <div class="flex items-center">
-                                <input id="edit-fleetcard" name="service[]" type="checkbox" value="Fleet card" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-fleetcard" name="service[]" type="checkbox" value="Fleet card"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-fleetcard" class="ml-2 block text-sm text-gray-700">Fleet Card</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="edit-aba" name="service[]" type="checkbox" value="KHQR" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-aba" name="service[]" type="checkbox" value="KHQR"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-aba" class="ml-2 block text-sm text-gray-700">KHQR</label>
                             </div>
                             <div class="flex items-center">
-                                <input id="edit-test" name="service[]" type="checkbox" value="Cash" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <input id="edit-test" name="service[]" type="checkbox" value="Cash"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
                                 <label for="edit-test" class="ml-2 block text-sm text-gray-700">Cash</label>
                             </div>
                         </div>
@@ -452,20 +541,29 @@
 
                     <div>
                         <label for="edit-address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
-                        <input type="text" id="edit-address" name="address" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                        <input type="text" id="edit-address" name="address" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
                     </div>
 
                     <div>
-                        <label for="edit-picture" class="block text-sm font-medium text-gray-700 mb-1">Station Image</label>
+                        <label for="edit-picture" class="block text-sm font-medium text-gray-700 mb-1">Station
+                            Image</label>
                         <div class="mt-1 flex items-center">
-                            <input type="file" id="edit-picture" name="picture" class="block w-full text-sm text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            <input type="file" id="edit-picture" name="picture"
+                                   class="block w-full text-sm text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                         </div>
                         <div id="current-image" class="mt-2 text-xs text-gray-500"></div>
                     </div>
 
                     <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
-                        <button type="button" class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn-hover-effect px-4 py-2 bg-blue-600 text-white text-xs font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out ml-2">Update Station</button>
+                        <button type="button"
+                                class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out"
+                                data-bs-dismiss="modal">Close
+                        </button>
+                        <button type="submit"
+                                class="btn-hover-effect px-4 py-2 bg-blue-600 text-white text-xs font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out ml-2">
+                            Update Station
+                        </button>
                     </div>
                 </form>
             </div>
@@ -474,32 +572,43 @@
 </div>
 
 <!-- Image Preview Modal -->
-<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+     id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg relative w-auto pointer-events-none my-6 mx-auto max-w-4xl">
         <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
             <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-gradient-to-r from-blue-500 to-blue-600">
                 <h5 class="text-xl font-medium leading-normal text-white" id="imagePreviewModalLabel">Station Image</h5>
-                <button type="button" class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button"
+                        class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline"
+                        data-bs-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body relative p-4 flex justify-center items-center">
-                <img id="modal-preview-image" src="" alt="Station Image" class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md">
+                <img id="modal-preview-image" src="" alt="Station Image"
+                     class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md">
             </div>
             <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
-                <button type="button" class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out" data-bs-dismiss="modal">Close</button>
+                <button type="button"
+                        class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out"
+                        data-bs-dismiss="modal">Close
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Location Preview Modal -->
-<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="locationPreviewModal" tabindex="-1" aria-labelledby="locationPreviewModalLabel" aria-hidden="true">
+<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+     id="locationPreviewModal" tabindex="-1" aria-labelledby="locationPreviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg relative w-auto pointer-events-none my-6 mx-auto max-w-4xl">
         <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
             <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-gradient-to-r from-blue-500 to-blue-600">
-                <h5 class="text-xl font-medium leading-normal text-white" id="locationPreviewModalLabel">Station Location</h5>
-                <button type="button" class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline" data-bs-dismiss="modal" aria-label="Close">
+                <h5 class="text-xl font-medium leading-normal text-white" id="locationPreviewModalLabel">Station
+                    Location</h5>
+                <button type="button"
+                        class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline"
+                        data-bs-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -509,11 +618,13 @@
                     <p id="location-coordinates" class="text-gray-600 text-sm"></p>
                 </div>
                 <div id="map-container" class="h-96 w-full rounded-lg overflow-hidden relative">
-                    <div id="map-error" class="hidden absolute inset-0 bg-gray-100 flex flex-col items-center justify-center p-4 text-center">
+                    <div id="map-error"
+                         class="hidden absolute inset-0 bg-gray-100 flex flex-col items-center justify-center p-4 text-center">
                         <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-3"></i>
                         <h4 class="text-lg font-semibold text-gray-800 mb-1">Map Loading Error</h4>
                         <p id="map-error-message" class="text-gray-600 text-sm"></p>
-                        <button id="retry-load-map" class="mt-3 px-4 py-2 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium">
+                        <button id="retry-load-map"
+                                class="mt-3 px-4 py-2 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium">
                             <i class="fas fa-sync-alt mr-1"></i> Retry
                         </button>
                     </div>
@@ -528,13 +639,17 @@
                     <div class="text-sm text-gray-500">
                         <i class="fas fa-info-circle mr-1"></i> Click and drag to navigate the map
                     </div>
-                    <button id="open-google-maps" class="btn-hover-effect bg-blue-100 text-blue-600 px-3 py-1 rounded-lg text-sm font-medium">
+                    <button id="open-google-maps"
+                            class="btn-hover-effect bg-blue-100 text-blue-600 px-3 py-1 rounded-lg text-sm font-medium">
                         <i class="fas fa-external-link-alt mr-1"></i> Open in Google Maps
                     </button>
                 </div>
             </div>
             <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
-                <button type="button" class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out" data-bs-dismiss="modal">Close</button>
+                <button type="button"
+                        class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out"
+                        data-bs-dismiss="modal">Close
+                </button>
             </div>
         </div>
     </div>
@@ -563,7 +678,7 @@
     };
 
     // Initialize when DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         setupMapModal();
         loadGoogleMaps();
     });
@@ -761,13 +876,13 @@
 
             // Create map
             mapState.map = new google.maps.Map(mapContainer, {
-                center: { lat: latitude, lng: longitude },
+                center: {lat: latitude, lng: longitude},
                 zoom: mapConfig.defaultZoom
             });
 
             // Add marker
             mapState.marker = new google.maps.Marker({
-                position: { lat: latitude, lng: longitude },
+                position: {lat: latitude, lng: longitude},
                 map: mapState.map,
                 title: 'Station Location'
             });
@@ -847,7 +962,7 @@
 
 <script>
     // Initialize DataTable with enhanced features
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#stations-table').DataTable({
             "ajax": {
                 "url": "marker-interface.php",
@@ -861,7 +976,7 @@
                 {
                     "data": null,
                     "className": "px-6 py-4 whitespace-nowrap",
-                    "render": function(data, type, row) {
+                    "render": function (data, type, row) {
                         return `<button class="btn-hover-effect bg-blue-100 text-blue-800 px-3 py-1 rounded-lg text-sm font-medium" onclick="viewLocation('${row.latitude}', '${row.longitude}')">
                                 <i class="fas fa-map-marker-alt mr-1"></i> View
                             </button>`;
@@ -874,7 +989,7 @@
                 {
                     "data": "other_product",
                     "className": "px-6 py-4 text-sm text-gray-500",
-                    "render": function(data) {
+                    "render": function (data) {
                         if (!data || data.length === 0) return 'N/A';
 
                         // Define color classes for different products
@@ -893,7 +1008,7 @@
                 {
                     "data": "description",
                     "className": "px-6 py-4 text-sm text-gray-500",
-                    "render": function(data) {
+                    "render": function (data) {
                         if (!data || data.length === 0) return 'N/A';
 
                         // Define color classes for different items in description
@@ -913,7 +1028,7 @@
                 {
                     "data": "service",
                     "className": "px-6 py-4 text-sm text-gray-500",
-                    "render": function(data) {
+                    "render": function (data) {
                         if (!data || data.length === 0) return 'N/A';
 
                         // Define color classes for different payment methods
@@ -937,7 +1052,7 @@
                 {
                     "data": "status",
                     "className": "px-6 py-4 whitespace-nowrap",
-                    "render": function(data) {
+                    "render": function (data) {
                         if (data === '16h') return '<span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">16 Hours</span>';
                         if (data === '24h') return '<span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">24 Hours</span>';
                         if (data === 'under construct') return '<span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Under Construct</span>';
@@ -947,7 +1062,7 @@
                 {
                     "data": "picture",
                     "className": "px-6 py-4 whitespace-nowrap text-sm text-gray-500",
-                    "render": function(data) {
+                    "render": function (data) {
                         if (data) {
                             return `<a href="#" class="marker-image-link" data-bs-toggle="modal" data-bs-target="#imagePreviewModal" data-image="pictures/${data}">
                                     <img src="pictures/${data}" alt="Station Image" class="w-10 h-10 rounded-full object-cover border-2 border-blue-200 hover:border-blue-400 transition duration-200">
@@ -960,7 +1075,7 @@
                 {
                     "data": null,
                     "className": "px-6 py-4 whitespace-nowrap text-sm font-medium",
-                    "render": function(data, type, row) {
+                    "render": function (data, type, row) {
                         return `<div class="flex space-x-2">
                                 <button class="btn-hover-effect bg-red-100 text-red-600 px-3 py-1 rounded-lg text-sm font-medium" onclick="deleteStation(${row.id})">
                                     <i class="fas fa-trash-alt mr-1"></i> Delete
@@ -993,10 +1108,10 @@
             "lengthMenu": [10, 25, 50, 100],
             "pageLength": 10,
             "order": [[0, "asc"]], // Default sort by ID ascending
-            "initComplete": function() {
+            "initComplete": function () {
                 // Add custom styling to search box
                 $('.dataTables_filter input').addClass('border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200');
-                $('.dataTables_filter label').contents().filter(function() {
+                $('.dataTables_filter label').contents().filter(function () {
                     return this.nodeType === 3;
                 }).remove();
                 $('.dataTables_filter label').prepend('<i class="fas fa-search mr-2 text-gray-400"></i>');
@@ -1131,7 +1246,7 @@
     }
 
     // Handle image preview in modal
-    $(document).on('click', '.marker-image-link', function(e) {
+    $(document).on('click', '.marker-image-link', function (e) {
         e.preventDefault();
         const imageUrl = $(this).data('image');
         $('#modal-preview-image').attr('src', imageUrl);
