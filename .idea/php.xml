@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/admin/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/admin/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/admin/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/admin/vendor/phpoffice/phpspreadsheet" />
+      <path value="$PROJECT_DIR$/admin/vendor/composer" />
+      <path value="$PROJECT_DIR$/admin/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/admin/vendor/markbaker/matrix" />
+      <path value="$PROJECT_DIR$/admin/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/admin/vendor/markbaker/complex" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration">
+    <option name="suggestChangeDefaultLanguageLevel" value="false" />
+  </component>
+</project>
