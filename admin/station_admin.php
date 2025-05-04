@@ -1,0 +1,1320 @@
+<?php
+//session_start();
+//date_default_timezone_set('Asia/Phnom_Penh');
+//
+//if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+//    header('Location: login.php');
+//    exit();
+//}
+//
+//// Check if the login session is older than 12 hours
+//if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > 43200) {
+//    // Session has expired
+//    session_unset();
+//    session_destroy();
+//    header('Location: login.php');
+//    exit();
+//}
+//
+//// If session is still valid, update login time to reset 12-hour timer
+//$_SESSION['login_time'] = time();
+//?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Stations | PTT Map</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- DataTables -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWfYa4jsQg-YtPDdFYPLLDDBDiqRvr3d8"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    animation: {
+                        'gradient': 'gradient 6s ease infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': { 'background-position': '0% 50%' },
+                            '50%': { 'background-position': '100% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .select2-container { width: 100% !important; }
+        .select2-container--default .select2-selection--single {
+            height: 42px;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 42px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 40px;
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        },
+
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans antialiased">
+<div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <!-- Sidebar (updated) -->
+    <div id="sidebar" class="fixed md:relative inset-y-0 left-0 transform md:translate-x-0 -translate-x-full w-64 h-screen bg-gradient-to-b from-primary-800 to-primary-900 transition-transform duration-300 ease-in-out z-40">
+        <!-- Sidebar Content -->
+        <div class="flex flex-col h-full">
+            <!-- Logo/Header -->
+            <div class="flex items-center justify-center h-16 px-4 bg-primary-900">
+                <span class="text-white font-semibold text-lg">PTT Map Finding</span>
+            </div>
+            <!-- Navigation Links -->
+            <div class="flex-1 overflow-y-auto px-4 py-4">
+                <nav class="space-y-2">
+                    <a href="index.php" class="flex items-center px-4 py-2 text-gray-200 rounded-lg hover:bg-primary-700 group">
+                        <i class="fas fa-home mr-3 text-primary-300 group-hover:text-white"></i>
+                        <span class="text-sm font-medium">Dashboard</span>
+                    </a>
+                    <a href="manage.php" class="flex items-center px-4 py-2 text-white bg-primary-700 rounded-lg group">
+                        <i class="fas fa-bullhorn mr-3 text-white"></i>
+                        <span class="text-sm font-medium">Promotions</span>
+                    </a>
+                    <a href="station_admin.php" class="flex items-center px-4 py-2 text-gray-200 rounded-lg hover:bg-primary-700 group">
+                        <i class="fas fa-gas-pump mr-3 text-primary-300 group-hover:text-white"></i>
+                        <span class="text-sm font-medium">Stations</span>
+                    </a>
+                    <a href="logout.php" class="flex items-center px-4 py-2 text-gray-200 rounded-lg hover:bg-primary-700 group">
+                        <i class="fas fa-sign-out-alt mr-3 text-primary-300 group-hover:text-white"></i>
+                        <span class="text-sm font-medium">Logout</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Overlay (Mobile only) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden md:hidden"></div>
+    <!-- Main Content -->
+    <div class="flex flex-col flex-1 overflow-hidden">
+        <!-- Mobile header -->
+        <!-- Mobile header (existing code) -->
+        <div class="md:hidden flex items-center justify-between px-4 py-3 bg-primary-700 border-b border-primary-600">
+            <div class="flex items-center">
+                <!-- Add onclick="toggleSidebar()" -->
+                <!-- Mobile Menu Button (Only shows on mobile) -->
+                <button id="mobile-menu-button" class="md:hidden text-white p-2 focus:outline-none ml-2">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <span class="text-white font-semibold">Promotion Manager</span>
+            </div>
+            <div class="flex items-center">
+                <a href="logout.php" class="text-white">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+        <!-- Main content area -->
+        <div class="flex-1 overflow-auto p-4 md:p-6">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header -->
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800 mb-1">Promotion Management</h1>
+                        <p class="text-gray-600">Manage all station promotions and marketing campaigns</p>
+                    </div>
+                </div>
+            <div class="animate-slide-in-right mb-6">
+                <button type="button"
+                        class="btn-hover-effect bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 md:px-6 md:py-3 rounded-lg shadow-md flex items-center text-sm md:text-base"
+                        data-bs-toggle="modal" data-bs-target="#addStationModal">
+                    <i class="fas fa-plus-circle mr-1 md:mr-2"></i> Add New Station
+                </button>
+            </div>
+
+            <!-- Stations Table -->
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="p-6 md:p-8"> <!-- Increased padding -->
+        <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-3 md:mb-4">All Stations</h2>
+        <div class="overflow-x-auto">
+            <table id="stations-table" class="min-w-full divide-y divide-gray-200 stripe hover display responsive nowrap" style="width:100%; min-width: 1200px;"> <!-- Added min-width -->
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"> <!-- Increased padding -->
+                            ID
+                        </th>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Location
+                        </th>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Station
+                        </th>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Products
+                        </th>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Services
+                        </th>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Payment
+                        </th>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Province
+                        </th>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                        </th>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Image
+                        </th>
+                        <th scope="col" class="px-4 py-3 md:px-8 md:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <!-- Data will be loaded via AJAX -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Station Modal -->
+<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+     id="addStationModal" tabindex="-1" aria-labelledby="addStationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg relative w-auto pointer-events-none my-6 mx-auto max-w-4xl">
+        <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+            <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-gradient-to-r from-blue-500 to-blue-600">
+                <h5 class="text-xl font-medium leading-normal text-white" id="addStationModalLabel">Add New Station</h5>
+                <button type="button"
+                        class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline"
+                        data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body relative p-4 md:p-6 overflow-y-auto max-h-[80vh]">
+                <form id="station-form" method="POST" action="marker-interface.php" enctype="multipart/form-data"
+                      class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="id" class="block text-sm font-medium text-gray-700 mb-1">Station ID</label>
+                            <input type="text" id="id" name="id" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                        </div>
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Station Name</label>
+                            <input type="text" id="title" name="title" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                        </div>
+                        <div>
+                            <label for="province" class="block text-sm font-medium text-gray-700 mb-1">Province</label>
+                            <select id="province" name="province" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                                <option value="" selected disabled>Select Province</option>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+                        <div>
+                            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select id="status" name="status" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                                <option value="" selected disabled>Select Status</option>
+                                <option value="16h">⏰ 16 Hours</option>
+                                <option value="24h">⏰ 24 Hours</option>
+                                <option value="under construct">🚫 Under Construct</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                            <input type="text" id="latitude" name="latitude" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                        </div>
+                        <div>
+                            <label for="longitude"
+                                   class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                            <input type="text" id="longitude" name="longitude" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Products</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="flex items-center">
+                                <input id="ulg95" name="product[]" type="checkbox" value="ULG 95"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="ulg95" class="ml-2 block text-sm text-gray-700">ULG 95</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="ulr91" name="product[]" type="checkbox" value="ULR 91"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="ulr91" class="ml-2 block text-sm text-gray-700">ULR 91</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="hsd" name="product[]" type="checkbox" value="HSD"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="hsd" class="ml-2 block text-sm text-gray-700">HSD</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Other Products</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="flex items-center">
+                                <input id="ev" name="other_product[]" type="checkbox" value="EV"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="ev" class="ml-2 block text-sm text-gray-700">EV</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="onion" name="other_product[]" type="checkbox" value="Onion"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="onion" class="ml-2 block text-sm text-gray-700">Onion</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Services</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="flex items-center">
+                                <input id="amazon" name="description[]" type="checkbox" value="Amazon"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="amazon" class="ml-2 block text-sm text-gray-700">Amazon</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="7eleven" name="description[]" type="checkbox" value="7-Eleven"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="7eleven" class="ml-2 block text-sm text-gray-700">7-Eleven</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="otr" name="description[]" type="checkbox" value="Otr"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="otr" class="ml-2 block text-sm text-gray-700">Otteri</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Payment Methods</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="flex items-center">
+                                <input id="fleetcard" name="service[]" type="checkbox" value="Fleet card"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="fleetcard" class="ml-2 block text-sm text-gray-700">Fleet Card</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="aba" name="service[]" type="checkbox" value="KHQR"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="aba" class="ml-2 block text-sm text-gray-700">KHQR</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="test" name="service[]" type="checkbox" value="Cash"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="test" class="ml-2 block text-sm text-gray-700">Cash</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <input type="text" id="address" name="address" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                    </div>
+
+                    <div>
+                        <label for="picture" class="block text-sm font-medium text-gray-700 mb-1">Station Image</label>
+                        <div class="mt-1 flex items-center">
+                            <input type="file" id="picture" name="picture"
+                                   class="block w-full text-sm text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                        <button type="button"
+                                class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out"
+                                data-bs-dismiss="modal">Close
+                        </button>
+                        <button type="submit"
+                                class="btn-hover-effect px-4 py-2 bg-blue-600 text-white text-xs font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out ml-2">
+                            Add Station
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Station Modal -->
+<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+     id="editStationModal" tabindex="-1" aria-labelledby="editStationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg relative w-auto pointer-events-none my-6 mx-auto max-w-4xl">
+        <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+            <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-gradient-to-r from-blue-500 to-blue-600">
+                <h5 class="text-xl font-medium leading-normal text-white" id="editStationModalLabel">Edit Station</h5>
+                <button type="button"
+                        class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline"
+                        data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body relative p-4 md:p-6 overflow-y-auto max-h-[80vh]">
+                <form id="edit-station-form" method="POST" action="marker-interface.php" enctype="multipart/form-data"
+                      class="space-y-4">
+                    <input type="hidden" id="edit-id" name="id">
+                    <input type="hidden" id="old-picture" name="old_picture">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="edit-title" class="block text-sm font-medium text-gray-700 mb-1">Station
+                                Name</label>
+                            <input type="text" id="edit-title" name="title" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                        </div>
+                        <div>
+                            <label for="edit-province"
+                                   class="block text-sm font-medium text-gray-700 mb-1">Province</label>
+                            <select id="edit-province" name="province" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                                <option value="" selected disabled>Select Province</option>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+                        <div>
+                            <label for="edit-status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select id="edit-status" name="status" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                                <option value="" selected disabled>Select Status</option>
+                                <option value="16h">⏰ 16 Hours</option>
+                                <option value="24h">⏰ 24 Hours</option>
+                                <option value="under construct">🚫 Under Construct</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="edit-latitude"
+                                   class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                            <input type="text" id="edit-latitude" name="latitude" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                        </div>
+                        <div>
+                            <label for="edit-longitude"
+                                   class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                            <input type="text" id="edit-longitude" name="longitude" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Products</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="flex items-center">
+                                <input id="edit-ulg95" name="product[]" type="checkbox" value="ULG 95"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-ulg95" class="ml-2 block text-sm text-gray-700">ULG 95</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-ulr91" name="product[]" type="checkbox" value="ULR 91"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-ulr91" class="ml-2 block text-sm text-gray-700">ULR 91</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-hsd" name="product[]" type="checkbox" value="HSD"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-hsd" class="ml-2 block text-sm text-gray-700">HSD</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Other Products</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="flex items-center">
+                                <input id="edit-ev" name="other_product[]" type="checkbox" value="EV"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-ev" class="ml-2 block text-sm text-gray-700">EV</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-onion" name="other_product[]" type="checkbox" value="Onion"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-onion" class="ml-2 block text-sm text-gray-700">Onion</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Services</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="flex items-center">
+                                <input id="edit-amazon" name="description[]" type="checkbox" value="Amazon"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-amazon" class="ml-2 block text-sm text-gray-700">Amazon</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-7eleven" name="description[]" type="checkbox" value="7-Eleven"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-7eleven" class="ml-2 block text-sm text-gray-700">7-Eleven</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-otr" name="description[]" type="checkbox" value="Otr"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-otr" class="ml-2 block text-sm text-gray-700">Otteri</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Payment Methods</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                            <div class="flex items-center">
+                                <input id="edit-fleetcard" name="service[]" type="checkbox" value="Fleet card"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-fleetcard" class="ml-2 block text-sm text-gray-700">Fleet Card</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-aba" name="service[]" type="checkbox" value="KHQR"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-aba" class="ml-2 block text-sm text-gray-700">KHQR</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="edit-test" name="service[]" type="checkbox" value="Cash"
+                                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded text-sm">
+                                <label for="edit-test" class="ml-2 block text-sm text-gray-700">Cash</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="edit-address" class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <input type="text" id="edit-address" name="address" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
+                    </div>
+
+                    <div>
+                        <label for="edit-picture" class="block text-sm font-medium text-gray-700 mb-1">Station
+                            Image</label>
+                        <div class="mt-1 flex items-center">
+                            <input type="file" id="edit-picture" name="picture"
+                                   class="block w-full text-sm text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                        <div id="current-image" class="mt-2 text-xs text-gray-500"></div>
+                    </div>
+
+                    <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                        <button type="button"
+                                class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out"
+                                data-bs-dismiss="modal">Close
+                        </button>
+                        <button type="submit"
+                                class="btn-hover-effect px-4 py-2 bg-blue-600 text-white text-xs font-medium uppercase rounded shadow-md hover:bg-blue-700 transition duration-150 ease-in-out ml-2">
+                            Update Station
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+     id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg relative w-auto pointer-events-none my-6 mx-auto max-w-4xl">
+        <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+            <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-gradient-to-r from-blue-500 to-blue-600">
+                <h5 class="text-xl font-medium leading-normal text-white" id="imagePreviewModalLabel">Station Image</h5>
+                <button type="button"
+                        class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline"
+                        data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body relative p-4 flex justify-center items-center">
+                <img id="modal-preview-image" src="" alt="Station Image"
+                     class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md">
+            </div>
+            <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                <button type="button"
+                        class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out"
+                        data-bs-dismiss="modal">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Location Preview Modal -->
+<div class="modal fade fixed inset-0 z-50 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+     id="locationPreviewModal" tabindex="-1" aria-labelledby="locationPreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg relative w-auto pointer-events-none my-6 mx-auto max-w-4xl">
+        <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
+            <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md bg-gradient-to-r from-blue-500 to-blue-600">
+                <h5 class="text-xl font-medium leading-normal text-white" id="locationPreviewModalLabel">Station
+                    Location</h5>
+                <button type="button"
+                        class="btn-close box-content w-4 h-4 p-1 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline"
+                        data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body relative p-4">
+                <div class="mb-4">
+                    <h6 class="text-lg font-semibold text-gray-800">Coordinates</h6>
+                    <p id="location-coordinates" class="text-gray-600 text-sm"></p>
+                </div>
+                <div id="map-container" class="h-96 w-full rounded-lg overflow-hidden relative">
+                    <div id="map-error"
+                         class="hidden absolute inset-0 bg-gray-100 flex flex-col items-center justify-center p-4 text-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-3"></i>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-1">Map Loading Error</h4>
+                        <p id="map-error-message" class="text-gray-600 text-sm"></p>
+                        <button id="retry-load-map"
+                                class="mt-3 px-4 py-2 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium">
+                            <i class="fas fa-sync-alt mr-1"></i> Retry
+                        </button>
+                    </div>
+                    <div id="map-loading" class="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-spinner fa-spin text-blue-500 text-3xl mb-2"></i>
+                            <p class="text-gray-600">Loading map...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 flex justify-between items-center">
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-info-circle mr-1"></i> Click and drag to navigate the map
+                    </div>
+                    <button id="open-google-maps"
+                            class="btn-hover-effect bg-blue-100 text-blue-600 px-3 py-1 rounded-lg text-sm font-medium">
+                        <i class="fas fa-external-link-alt mr-1"></i> Open in Google Maps
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                <button type="button"
+                        class="btn-hover-effect px-4 py-2 bg-gray-200 text-gray-700 text-xs font-medium uppercase rounded shadow-md hover:bg-gray-300 transition duration-150 ease-in-out"
+                        data-bs-dismiss="modal">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('hidden');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const isClickInsideSidebar = sidebar.contains(event.target);
+            const isClickOnMenuToggle = mobileMenuToggle.contains(event.target);
+
+            if (!isClickInsideSidebar && !isClickOnMenuToggle && !sidebar.classList.contains('hidden') && window.innerWidth < 768) {
+                sidebar.classList.add('hidden');
+            }
+        });
+    });
+
+    // Initialize DataTable with responsive features
+    $(document).ready(function () {
+        $('#stations-table').DataTable({
+            responsive: {
+                details: {
+                    display: $.fn.dataTable.Responsive.display.modal({
+                        header: function (row) {
+                            var data = row.data();
+                            return 'Details for ' + data.title;
+                        }
+                    }),
+                    renderer: $.fn.dataTable.Responsive.renderer.tableAll({
+                        tableClass: 'table'
+                    })
+                }
+            },
+            "ajax": {
+                "url": "marker-interface.php",
+                "dataSrc": "STATION"
+            },
+            "columns": [
+{
+    "data": "id",
+    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm font-medium text-gray-900",
+    "width": "50px",
+    "responsivePriority": 2 // Lower priority, e.g., 2 (1 is highest)
+},
+                {
+                    "data": null,
+                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap",
+                    "render": function (data, type, row) {
+                        return `<button class="btn-hover-effect bg-blue-100 text-blue-800 px-2 py-1 md:px-3 md:py-1 rounded-lg text-xs md:text-sm font-medium" onclick="viewLocation('${row.latitude}', '${row.longitude}')">
+                                <i class="fas fa-map-marker-alt mr-1"></i> View
+                            </button>`;
+                    }
+                },
+                {
+                    "data": "title",
+                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm text-gray-500"
+                },
+                {
+                    "data": "other_product",
+                    "className": "px-3 py-2 md:px-6 md:py-4 text-sm text-gray-500",
+                    "render": function (data) {
+                        if (!data || data.length === 0) return 'N/A';
+
+                        const colorMap = {
+                            'EV': 'bg-purple-100 text-purple-800',
+                            'Onion': 'bg-orange-100 text-orange-800'
+                        };
+
+                        return data.map(item => {
+                            const colorClass = colorMap[item] || 'bg-gray-100 text-gray-800';
+                            return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colorClass} mr-1 mb-1">${item}</span>`;
+                        }).join('');
+                    }
+                },
+                {
+                    "data": "description",
+                    "className": "px-3 py-2 md:px-6 md:py-4 text-sm text-gray-500",
+                    "render": function (data) {
+                        if (!data || data.length === 0) return 'N/A';
+
+                        const colorMap = {
+                            'Amazon': 'bg-purple-100 text-purple-800',
+                            '7-Eleven': 'bg-orange-100 text-orange-800',
+                            'Otr': 'bg-teal-100 text-teal-800'
+                        };
+
+                        return data.map(item => {
+                            const colorClass = colorMap[item] || 'bg-gray-100 text-gray-800';
+                            return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colorClass} mr-1 mb-1">${item}</span>`;
+                        }).join('');
+                    }
+                },
+                {
+                    "data": "service",
+                    "className": "px-3 py-2 md:px-6 md:py-4 text-sm text-gray-500",
+                    "render": function (data) {
+                        if (!data || data.length === 0) return 'N/A';
+
+                        const colorMap = {
+                            'Fleet card': 'bg-indigo-100 text-indigo-800',
+                            'KHQR': 'bg-green-100 text-green-800',
+                            'Cash': 'bg-yellow-100 text-yellow-800'
+                        };
+
+                        return data.map(item => {
+                            const colorClass = colorMap[item] || 'bg-gray-100 text-gray-800';
+                            return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colorClass} mr-1 mb-1">${item}</span>`;
+                        }).join('');
+                    }
+                },
+                {
+                    "data": "province",
+                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm text-gray-500"
+                },
+                {
+                    "data": "status",
+                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap",
+                    "render": function (data) {
+                        if (data === '16h') return '<span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">16 Hours</span>';
+                        if (data === '24h') return '<span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">24 Hours</span>';
+                        if (data === 'under construct') return '<span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Under Construct</span>';
+                        return data;
+                    }
+                },
+                {
+                    "data": "picture",
+                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm text-gray-500",
+                    "render": function (data) {
+                        if (data) {
+                            return `<a href="#" class="marker-image-link" data-bs-toggle="modal" data-bs-target="#imagePreviewModal" data-image="pictures/${data}">
+                                    <img src="pictures/${data}" alt="Station Image" class="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-blue-200 hover:border-blue-400 transition duration-200">
+                                </a>`;
+                        } else {
+                            return '<span class="text-gray-400">No Image</span>';
+                        }
+                    }
+                },
+                {
+                    "data": null,
+                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm font-medium",
+                    "render": function (data, type, row) {
+                        return `<div class="flex space-x-1 md:space-x-2">
+                                <button class="btn-hover-effect bg-red-100 text-red-600 px-2 py-1 md:px-3 md:py-1 rounded-lg text-xs md:text-sm font-medium" onclick="deleteStation(${row.id})">
+                                    <i class="fas fa-trash-alt mr-1"></i> <span class="hidden sm:inline">Delete</span>
+                                </button>
+                                <button class="btn-hover-effect bg-blue-100 text-blue-600 px-2 py-1 md:px-3 md:py-1 rounded-lg text-xs md:text-sm font-medium" onclick="editStation(${row.id})" data-bs-toggle="modal" data-bs-target="#editStationModal">
+                                    <i class="fas fa-edit mr-1"></i> <span class="hidden sm:inline">Edit</span>
+                                </button>
+                            </div>`;
+                    }
+                }
+            ],
+            "responsive": true,
+            "dom": '<"flex flex-col md:flex-row items-center justify-between"<"mb-4 md:mb-0"l><"flex items-center"f>>rt<"flex flex-col md:flex-row items-center justify-between"<"mb-4 md:mb-0"i><"flex"p>>',
+            "language": {
+                "search": "",
+                "searchPlaceholder": "Search stations...",
+                "lengthMenu": "Show _MENU_ entries",
+                "info": "Showing _START_ to _END_ of _TOTAL_ stations",
+                "infoEmpty": "Showing 0 to 0 of 0 stations",
+                "infoFiltered": "(filtered from _MAX_ total stations)",
+                "paginate": {
+                    "first": "First",
+                    "last": "Last",
+                    "next": '<i class="fas fa-chevron-right"></i>',
+                    "previous": '<i class="fas fa-chevron-left"></i>'
+                },
+                "emptyTable": "No stations available",
+                "zeroRecords": "No matching stations found"
+            },
+            "lengthMenu": [5, 10, 25, 50, 100],
+            "pageLength": 10,
+            "order": [[0, "asc"]],
+            "initComplete": function () {
+                // Add custom styling to search box
+                $('.dataTables_filter input').addClass('border border-gray-300 rounded-lg px-3 py-1.5 md:px-4 md:py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm');
+                $('.dataTables_filter label').contents().filter(function () {
+                    return this.nodeType === 3;
+                }).remove();
+                $('.dataTables_filter label').prepend('<i class="fas fa-search mr-2 text-gray-400"></i>');
+
+                // Add custom styling to length menu
+                $('.dataTables_length select').addClass('border border-gray-300 rounded-lg px-3 py-1.5 md:px-4 md:py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm');
+            }
+        });
+    });
+
+    // Delete station
+    function deleteStation(id) {
+        if (confirm('Are you sure you want to delete this station?')) {
+            fetch(`marker-interface.php?id=${id}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Refresh the DataTable
+                    $('#stations-table').DataTable().ajax.reload();
+                    // Show success message
+                    showAlert('Station deleted successfully!', 'success');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('Failed to delete station.', 'error');
+                });
+        }
+    }
+
+    // Edit station - populate form
+    function editStation(id) {
+        fetch(`marker-interface.php?id=${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.STATION.length > 0) {
+                    const station = data.STATION[0];
+
+                    // Populate basic fields
+                    document.getElementById('edit-id').value = station.id;
+                    document.getElementById('edit-title').value = station.title;
+                    document.getElementById('edit-province').value = station.province;
+                    document.getElementById('edit-latitude').value = station.latitude;
+                    document.getElementById('edit-longitude').value = station.longitude;
+                    document.getElementById('edit-address').value = station.address;
+                    document.getElementById('edit-status').value = station.status;
+                    document.getElementById('old-picture').value = station.picture || '';
+
+                    // Show current image if exists
+                    if (station.picture) {
+                        document.getElementById('current-image').innerHTML = `
+                                <span class="text-green-600">Current image:</span> ${station.picture}
+                            `;
+                    } else {
+                        document.getElementById('current-image').innerHTML = `
+                                <span class="text-gray-500">No image uploaded</span>
+                            `;
+                    }
+
+                    // Reset all checkboxes
+                    document.querySelectorAll('#edit-station-form input[type="checkbox"]').forEach(checkbox => {
+                        checkbox.checked = false;
+                    });
+
+                    // Check product checkboxes
+                    if (station.product) {
+                        station.product.forEach(product => {
+                            const checkbox = document.querySelector(`#edit-station-form input[name="product[]"][value="${product}"]`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
+
+                    // Check other product checkboxes
+                    if (station.other_product) {
+                        station.other_product.forEach(product => {
+                            const checkbox = document.querySelector(`#edit-station-form input[name="other_product[]"][value="${product}"]`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
+
+                    // Check service checkboxes
+                    if (station.description) {
+                        station.description.forEach(service => {
+                            const checkbox = document.querySelector(`#edit-station-form input[name="description[]"][value="${service}"]`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
+
+                    // Check payment method checkboxes
+                    if (station.service) {
+                        station.service.forEach(payment => {
+                            const checkbox = document.querySelector(`#edit-station-form input[name="service[]"][value="${payment}"]`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
+
+                    // Initialize the modal
+                    const editModal = new bootstrap.Modal(document.getElementById('editStationModal'));
+                    editModal.show();
+                } else {
+                    console.error('No data found for the specified ID.');
+                    showAlert('Station data not found.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('Failed to load station data.', 'error');
+            });
+    }
+
+    // Show alert message
+    function showAlert(message, type) {
+        const alert = document.createElement('div');
+        alert.className = `fixed top-4 right-4 z-50 px-4 py-3 md:px-6 md:py-4 rounded-lg shadow-lg text-white font-medium ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+        alert.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+        document.body.appendChild(alert);
+
+        // Remove alert after 3 seconds
+        setTimeout(() => {
+            alert.remove();
+        }, 3000);
+    }
+
+    // Handle image preview in modal
+    $(document).on('click', '.marker-image-link', function (e) {
+        e.preventDefault();
+        const imageUrl = $(this).data('image');
+        $('#modal-preview-image').attr('src', imageUrl);
+        const modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+        modal.show();
+    });
+
+    // Populate province dropdowns
+    function populateProvinceDropdowns() {
+        const provinces = [
+            "Banteay Meanchey", "Battambang", "Kampong Cham", "Kampong Chhnang", "Kampong Speu",
+            "Kampong Thom", "Kampot", "Kandal", "Koh Kong", "Kratié", "Mondulkiri", "Oddar Meanchey", "Phnom Penh",
+            "Pailin", "Preah Sihanouk", "Preah Vihear", "Pursat", "Ratanakiri", "Siem Reap", "Prey Veng",
+            "Stung Treng", "Svay Rieng", "Takéo", "Kep", "Otdar Meanchey", "Pursat"
+        ];
+
+        const dropdowns = ['province', 'edit-province'];
+
+        dropdowns.forEach(dropdownId => {
+            const dropdown = document.getElementById(dropdownId);
+            provinces.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province;
+                option.textContent = province;
+                dropdown.appendChild(option);
+            });
+        });
+    }
+
+    // Initialize province dropdowns when page loads
+    document.addEventListener('DOMContentLoaded', populateProvinceDropdowns);
+
+    // Configuration object for easy customization
+    const mapConfig = {
+        apiKey: 'AIzaSyBWfYa4jsQg-YtPDdFYPLLDDBDiqRvr3d8',
+        defaultZoom: 15,
+        fallbackMapLink: 'https://www.google.com/maps',
+        loadingMessage: 'Loading map...',
+        errorMessages: {
+            elementNotFound: 'Map components not available',
+            apiFailed: 'Failed to load Google Maps',
+            invalidCoords: 'Invalid coordinates provided'
+        }
+    };
+
+    // Global state
+    const mapState = {
+        initialized: false,
+        currentModal: null,
+        map: null,
+        marker: null
+    };
+
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', function () {
+        setupMapModal();
+        loadGoogleMaps();
+    });
+
+    // Set up modal with flexible element detection
+    function setupMapModal() {
+        // Try to get elements with fallbacks
+        const modalEl = getElementWithFallback('locationPreviewModal', () => {
+            console.warn('Modal element not found, creating fallback');
+            return createFallbackModal();
+        });
+
+        // Set up modal events if available
+        if (modalEl) {
+            modalEl.addEventListener('shown.bs.modal', handleModalShown);
+            modalEl.addEventListener('hidden.bs.modal', handleModalHidden);
+        }
+
+        // Set up buttons with existence checks
+        setupButton('retry-load-map', handleRetryClick);
+        setupButton('open-google-maps', handleOpenInMapsClick);
+    }
+
+    // Flexible element getter with fallback
+    function getElementWithFallback(id, fallbackFn) {
+        const el = document.getElementById(id);
+        if (!el && fallbackFn) {
+            return fallbackFn();
+        }
+        return el;
+    }
+
+    // Create a simple fallback modal if needed
+    function createFallbackModal() {
+        const modal = document.createElement('div');
+        modal.className = 'fallback-modal';
+        modal.innerHTML = `
+    <div class="modal-content">
+      <div id="fallback-location-info"></div>
+      <div id="fallback-map-container">
+        <p>${mapConfig.errorMessages.elementNotFound}</p>
+        <a id="fallback-map-link" href="#" target="_blank">View in Google Maps</a>
+      </div>
+    </div>
+  `;
+        document.body.appendChild(modal);
+        return modal;
+    }
+
+    // Handle modal shown event
+    function handleModalShown() {
+        const coordsEl = getElementWithFallback('location-coordinates');
+        if (coordsEl && coordsEl.textContent) {
+            const [lat, lng] = parseCoordinates(coordsEl.textContent);
+            if (lat && lng) {
+                initMap(lat, lng);
+            }
+        }
+    }
+
+    // Handle modal hidden event
+    function handleModalHidden() {
+        cleanUpMap();
+    }
+
+    // Set up button with existence check
+    function setupButton(id, handler) {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.addEventListener('click', handler);
+        }
+    }
+
+    // View location - main entry point
+    function viewLocation(latitude, longitude) {
+        try {
+            // Safely handle coordinates
+            const lat = parseFloat(latitude);
+            const lng = parseFloat(longitude);
+
+            if (isNaN(lat) || isNaN(lng)) {
+                throw new Error(mapConfig.errorMessages.invalidCoords);
+            }
+
+            // Try standard modal flow first
+            if (tryStandardModalFlow(lat, lng)) {
+                return;
+            }
+
+            // Fallback to simple display
+            fallbackLocationDisplay(lat, lng);
+
+        } catch (error) {
+            console.error('Location view error:', error);
+            showUserMessage(error.message || 'Failed to show location');
+        }
+    }
+
+    // Try standard modal flow
+    function tryStandardModalFlow(lat, lng) {
+        const coordsEl = getElementWithFallback('location-coordinates');
+        const modalEl = getElementWithFallback('locationPreviewModal');
+
+        if (!coordsEl || !modalEl) {
+            return false;
+        }
+
+        // Update coordinates
+        coordsEl.textContent = `Latitude: ${lat}, Longitude: ${lng}`;
+
+        // Show loading state if elements exist
+        const loadingEl = document.getElementById('map-loading');
+        const errorEl = document.getElementById('map-error');
+        if (loadingEl) loadingEl.classList.remove('hidden');
+        if (errorEl) errorEl.classList.add('hidden');
+
+        // Show modal
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+
+        return true;
+    }
+
+    // Fallback display when modal isn't available
+    function fallbackLocationDisplay(lat, lng) {
+        // Try to find or create fallback elements
+        const container = getElementWithFallback('fallback-map-container', () => {
+            const div = document.createElement('div');
+            div.id = 'fallback-map-container';
+            document.body.appendChild(div);
+            return div;
+        });
+
+        const link = getElementWithFallback('fallback-map-link', () => {
+            const a = document.createElement('a');
+            a.id = 'fallback-map-link';
+            a.target = '_blank';
+            container.appendChild(a);
+            return a;
+        });
+
+        const info = getElementWithFallback('fallback-location-info', () => {
+            const div = document.createElement('div');
+            div.id = 'fallback-location-info';
+            container.prepend(div);
+            return div;
+        });
+
+        // Update content
+        info.textContent = `Location: ${lat}, ${lng}`;
+        link.href = `${mapConfig.fallbackMapLink}?q=${lat},${lng}`;
+        link.textContent = 'Open in Google Maps';
+
+        // Show to user
+        showUserMessage(`Location: ${lat}, ${lng} - Click below to view in Google Maps`, 'info');
+    }
+
+    // Load Google Maps API
+    function loadGoogleMaps() {
+        if (window.google && google.maps) return;
+
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${mapConfig.apiKey}&callback=handleMapsApiLoaded`;
+        script.async = true;
+        script.defer = true;
+        script.onerror = handleMapsApiError;
+        document.head.appendChild(script);
+    }
+
+    // Handle successful API load
+    function handleMapsApiLoaded() {
+        console.log('Google Maps API loaded');
+        // Ready for map initialization
+    }
+
+    // Handle API load error
+    function handleMapsApiError() {
+        console.error('Failed to load Google Maps API');
+        showUserMessage(mapConfig.errorMessages.apiFailed, 'error');
+    }
+
+    // Initialize map with flexible approach
+    function initMap(latitude, longitude) {
+        try {
+            const mapContainer = getElementWithFallback('map-container');
+            if (!mapContainer) {
+                throw new Error('Map container not available');
+            }
+
+            // Wait for container to be visible
+            if (mapContainer.offsetWidth === 0 || mapContainer.offsetHeight === 0) {
+                setTimeout(() => initMap(latitude, longitude), 100);
+                return;
+            }
+
+            // Create map
+            mapState.map = new google.maps.Map(mapContainer, {
+                center: {lat: latitude, lng: longitude},
+                zoom: mapConfig.defaultZoom
+            });
+
+            // Add marker
+            mapState.marker = new google.maps.Marker({
+                position: {lat: latitude, lng: longitude},
+                map: mapState.map,
+                title: 'Station Location'
+            });
+
+            // Update UI
+            const loadingEl = document.getElementById('map-loading');
+            if (loadingEl) loadingEl.classList.add('hidden');
+
+            mapState.initialized = true;
+
+        } catch (error) {
+            console.error('Map init error:', error);
+            showMapError(error.message || mapConfig.errorMessages.apiFailed);
+        }
+    }
+
+    // Clean up map resources
+    function cleanUpMap() {
+        if (mapState.marker) {
+            mapState.marker.setMap(null);
+            mapState.marker = null;
+        }
+        mapState.map = null;
+        mapState.initialized = false;
+    }
+
+    // Show error in map container
+    function showMapError(message) {
+        const errorEl = getElementWithFallback('map-error');
+        const messageEl = getElementWithFallback('map-error-message');
+        const loadingEl = getElementWithFallback('map-loading');
+
+        if (errorEl) errorEl.classList.remove('hidden');
+        if (messageEl) messageEl.textContent = message;
+        if (loadingEl) loadingEl.classList.add('hidden');
+    }
+
+    // Show user message (toast/alert)
+    function showUserMessage(message, type = 'error') {
+        // Implement your preferred user notification method
+        console.log(`${type}: ${message}`);
+        alert(`${type.toUpperCase()}: ${message}`);
+    }
+
+    // Button handlers
+    function handleRetryClick() {
+        const coordsEl = getElementWithFallback('location-coordinates');
+        if (coordsEl && coordsEl.textContent) {
+            const [lat, lng] = parseCoordinates(coordsEl.textContent);
+            initMap(lat, lng);
+        }
+    }
+
+    function handleOpenInMapsClick() {
+        const coordsEl = getElementWithFallback('location-coordinates');
+        if (coordsEl && coordsEl.textContent) {
+            const [lat, lng] = parseCoordinates(coordsEl.textContent);
+            window.open(`${mapConfig.fallbackMapLink}?q=${lat},${lng}`, '_blank');
+        }
+    }
+
+    // Parse coordinates from text
+    function parseCoordinates(text) {
+        try {
+            const lat = parseFloat(text.split('Latitude: ')[1].split(',')[0]);
+            const lng = parseFloat(text.split('Longitude: ')[1]);
+            return [lat, lng];
+        } catch (e) {
+            console.error('Coordinate parsing error:', e);
+            return [null, null];
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const menuButton = document.getElementById('mobile-menu-button');
+
+  // Toggle sidebar
+  menuButton.addEventListener('click', function() {
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
+  });
+
+  // Close sidebar when clicking overlay
+  overlay.addEventListener('click', function() {
+    sidebar.classList.add('-translate-x-full');
+    overlay.classList.add('hidden');
+  });
+
+  // Auto-close on desktop
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+      sidebar.classList.remove('-translate-x-full');
+      overlay.classList.add('hidden');
+    }
+  });
+})
+</script>
+</body>
+</html>
