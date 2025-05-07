@@ -1,26 +1,4 @@
 <?php
-//session_start();
-//date_default_timezone_set('Asia/Phnom_Penh');
-//
-//if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-//    header('Location: login.php');
-//    exit();
-//}
-//
-//// Check if the login session is older than 12 hours
-//if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > 43200) {
-//    // Session has expired
-//    session_unset();
-//    session_destroy();
-//    header('Location: login.php');
-//    exit();
-//}
-//
-//// If session is still valid, update login time to reset 12-hour timer
-//$_SESSION['login_time'] = time();
-//?>
-
-<?php
 date_default_timezone_set('Asia/Phnom_Penh');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -97,8 +75,26 @@ foreach ($promotions['PROMOTIONS'] as $promotion) {
             break;
         }
     }
-}
-
+}date_default_timezone_set('Asia/Phnom_Penh');
+	$current_time = new DateTime('now');
+	
+	$promotions = json_decode(file_get_contents('./data/promotions.json'), true, 512, JSON_UNESCAPED_UNICODE);
+	$active_promotions = [];
+	
+	foreach ($promotions['PROMOTIONS'] as $station) {
+		foreach ($station['promotions'] as $promo) {
+			$end_time = new DateTime($promo['end_time']);
+			if ($end_time > $current_time) {
+				$time_diff = $end_time->diff($current_time);
+				$days = $time_diff->days;
+				$hours = $time_diff->h;
+				$minutes = $time_diff->i;
+				$seconds = $time_diff->s;
+				$promo['countdown'] = sprintf("%dd %dh %dm %ds", $days, $hours, $minutes, $seconds);
+				$active_promotions[] = $promo;
+			}
+		}
+	}
 // Prepare data for charts
 $station_titles = [];
 $promotion_counts = [];
@@ -201,338 +197,289 @@ $province_expired_counts = json_encode(array_column($province_promotion_status, 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <title>PTT Promotions Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
+        :root {
+            --primary: #3a86ff;
+            --secondary: #8338ec;
+            --accent: #ff006e;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+        }
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: #1e293b;
         }
-
-        #wrapper {
-            display: flex;
-            height: 100vh;
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
-
-        #sidebar-wrapper {
-            width: 250px;
-            background-color: #343a40;
-            color: white;
-            transition: width 0.3s ease;
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
-
-        #sidebar-wrapper.toggled {
-            width: 60px;
+        
+        .countdown-active {
+            animation: pulse 2s infinite;
         }
-
-        .sidebar-heading {
-            padding: 20px;
-            font-size: 1.25em;
-            font-weight: bold;
-            background: #007bff;
-            text-align: center;
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
         }
-
-        .sidebar-heading img {
-            margin-right: 10px;
+        
+        .sidebar-item {
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
         }
-
-        .list-group-item {
-            border: none;
-            color: white;
-            background-color: #343a40;
-            transition: background-color 0.3s ease;
+        
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid white;
         }
-
-        .list-group-item:hover {
-            background-color: #495057;
+        
+        .sidebar-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-left: 3px solid white;
         }
-
-        .list-group-item-action {
-            color: white;
-        }
-
-        #page-content-wrapper {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            transition: margin-left 0.3s ease;
-        }
-
-        #page-content-wrapper.toggled {
-            margin-left: -190px;
-        }
-
-        .navbar {
-            padding: 10px 15px;
-            background-color: whitesmoke;
-            color: white;
-            box-shadow: 0 10px 16px -4px rgba(0, 0, 0, 0.6);
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            color: white;
-        }
-
-        .navbar-brand img {
-            margin-right: 10px;
-        }
-
-        .content-section {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.6s forwards;
-        }
-
-        .content-section:nth-child(even) {
-            animation-delay: 0.2s;
-        }
-
-        .content-section:nth-child(odd) {
-            animation-delay: 0.4s;
-        }
-
-        .content-section h2 {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            color: #343a40;
-        }
-
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-header {
-            background-color: transparent;
-            color: white;
-            border-bottom: none;
-            font-size: 1.25em;
-            font-weight: bold;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .card-body {
-            padding: 30px;
-            text-align: center;
-        }
-
-        .card-body h1 {
-            margin: 0;
-            font-size: 2.5em;
-        }
-
-        .card-icon {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 2em;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .bg-primary {
-            background-color: #007bff !important;
-        }
-
-        .bg-success {
-            background-color: #28a745 !important;
-        }
-
-        .bg-info {
-            background-color: #17a2b8 !important;
-        }
-
-        .countdown-timer {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #28a745;
-        }
-
-        .promotion-id {
-            font-size: 1.2em;
-        }
-
+        
         .chart-container {
-            position: relative;
-            height: 40vh;
-        }
-
-        h1 {
-            color: #343a40;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        list-group-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .material-icons {
-            margin-right: 8px;
+            height: 350px;
         }
     </style>
 </head>
 
-<body>
-    <div class="d-flex" id="wrapper">
-        <!-- Sidebar -->
-        <div id="sidebar-wrapper">
-            <div class="sidebar-heading">
-                <img src="" width="30" height="30" alt="">
-                PTT Map Finding
+<body class="min-h-screen">
+  <div class="flex flex-col h-full" x-data="{ mobileMenuOpen: false }">
+    <!-- Header Bar -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-2">
+                    <img src="./pictures/logo_Station.png" alt="PTT Logo" class="h-8 w-auto">
+                </div>
+                
+                <!-- Main Navigation - Desktop -->
+                <nav class="hidden md:flex items-center space-x-4">
+                    <a href="index.php" class="flex items-center px-4 py-2 rounded-lg <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'); ?> transition-all">
+                        <i class="fas fa-chart-pie w-6 text-center"></i>
+                        <span class="ml-2">Overview</span>
+                    </a>
+                    <a href="manage.php" class="flex items-center px-4 py-2 rounded-lg <?php echo (basename($_SERVER['PHP_SELF']) == 'manage.php' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'); ?> transition-all">
+                        <i class="fas fa-bullhorn w-6 text-center"></i>
+                        <span class="ml-2">Marketing</span>
+                    </a>
+                    <a href="station_admin.php" class="flex items-center px-4 py-2 rounded-lg <?php echo (basename($_SERVER['PHP_SELF']) == 'station_admin.php' ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-100'); ?> transition-all">
+                        <i class="fas fa-gas-pump w-6 text-center"></i>
+                        <span class="ml-2">Stations</span>
+                    </a>
+                </nav>
+                
+                <!-- Right Side Controls -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden md:block">
+                        <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" aria-label="Search">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+
+                    <button class="md:hidden text-gray-600 focus:outline-none" @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Toggle menu">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
             </div>
-            <div class="list-group list-group-flush">
-                <a href="index.php" class="list-group-item list-group-item-action"><i class="material-icons">dashboard</i> Overview</a>
-                <a href="manage.php" class="list-group-item list-group-item-action"><i class="material-icons">campaign</i> Marketing</a>
-                <a href="station_admin.php" class="list-group-item list-group-item-action"><i class="material-icons">local_gas_station</i> Station</a>
-            </div>
-        </div>
-        <!-- /#sidebar-wrapper -->
-
-        <!-- Page Content -->
-        <div id="page-content-wrapper">
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <!-- <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button> -->
-                <a class="navbar-brand ml-3" href="#">
-                    <img src="./pictures/logo_Station.png" width="200" height="auto" alt="Logo">
-                </a>
-                <div class="ml-auto">
-                    <a href="logout.php" class="btn btn-danger">Logout</a>
-                </div>
-            </nav>
-            <div class="container-fluid mt-5">
-                <h1>Promotions Dashboard</h1>
-
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card bg-primary text-white mb-3">
-                            <div class="card-icon"><i class="fas fa-gas-pump"></i></div>
-                            <div class="card-header">TOTAL STATIONS</div>
-                            <div class="card-body">
-                                <h1><?php echo $total_stations; ?></h1>
-                            </div>
-                        </div>
+            
+            <!-- Mobile Menu -->
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden py-2 px-4 bg-white border-t border-gray-200">
+                <div class="flex flex-col space-y-2">
+                    <a href="index.php" class="flex items-center px-3 py-2 rounded-lg <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-100'); ?>">
+                        <i class="fas fa-chart-pie w-6 text-center"></i>
+                        <span class="ml-2">Overview</span>
+                        <?php if (basename($_SERVER['PHP_SELF']) == 'index.php'): ?>
+                            <span class="ml-auto text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Current</span>
+                        <?php endif; ?>
+                    </a>
+                    <a href="manage.php" class="flex items-center px-3 py-2 rounded-lg <?php echo (basename($_SERVER['PHP_SELF']) == 'manage.php' ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-100'); ?>">
+                        <i class="fas fa-bullhorn w-6 text-center"></i>
+                        <span class="ml-2">Marketing</span>
+                        <?php if (basename($_SERVER['PHP_SELF']) == 'manage.php'): ?>
+                            <span class="ml-auto text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Current</span>
+                        <?php endif; ?>
+                    </a>
+                    <a href="station_admin.php" class="flex items-center px-3 py-2 rounded-lg <?php echo (basename($_SERVER['PHP_SELF']) == 'station_admin.php' ? 'bg-blue-100 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-100'); ?>">
+                        <i class="fas fa-gas-pump w-6 text-center"></i>
+                        <span class="ml-2">Stations</span>
+                        <?php if (basename($_SERVER['PHP_SELF']) == 'station_admin.php'): ?>
+                            <span class="ml-auto text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Current</span>
+                        <?php endif; ?>
+                    </a>
+                    <div class="relative pt-2">
+                        <input type="text" placeholder="Search..." class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" aria-label="Search">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card bg-success text-white mb-3">
-                            <div class="card-icon"><i class="fas fa-id-card"></i></div>
-                            <!-- Corrected the icon for fleet card -->
-                            <div class="card-header">TOTAL FLEET</div>
-                            <div class="card-body">
-                                <h1><?php echo $total_fleet; ?></h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card bg-info text-white mb-3">
-                            <div class="card-icon"><i class="fas fa-charging-station"></i></div>
-                            <div class="card-header">TOTAL EV</div>
-                            <div class="card-body">
-                                <h1><?php echo $total_ev; ?></h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="content-section">
-                    <h2>Promotion Countdowns</h2>
-                    <ul id="promotion-list" class="list-group">
-                        <?php foreach ($promotion_end_times as $promotion_id => $end_time) : ?>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span class="promotion-id"><?php echo $promotion_id; ?></span>
-                                <span class="countdown-timer" data-end-time="<?php echo $end_time; ?>"></span>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-
-                <div class="row mt-4">
-                    <div class="col-lg-6">
-                        <div class="content-section">
-                            <h2>Promotion Distribution</h2>
-                            <div class="chart-container">
-                                <canvas id="chart3"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="content-section">
-                            <h2>Province Promotion Status</h2>
-                            <div class="chart-container">
-                                <canvas id="chart5"></canvas>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="logout.php" class="flex items-center px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100">
+                        <i class="fas fa-sign-out-alt w-6 text-center"></i>
+                        <span class="ml-2">Logout</span>
+                    </a>
                 </div>
             </div>
         </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+        <!-- Content Header -->
+        <div class="bg-white shadow-sm">
+            <div class="container mx-auto px-6 py-4">
+                <h1 class="text-3xl font-bold text-gray-800">Promotions Dashboard</h1>
+                <p class="text-gray-600">Monitor and manage all station promotions in real-time</p>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6 container mx-auto">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Total Stations -->
+                <div class="glass-card p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 font-medium">Total Stations</p>
+                            <h3 class="text-3xl font-bold mt-2"><?php echo $total_stations; ?></h3>
+                        </div>
+                        <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
+                            <i class="fas fa-gas-pump text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <span class="text-sm text-gray-500">Updated just now</span>
+                    </div>
+                </div>
+
+                <!-- Total Fleet -->
+                <div class="glass-card p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 font-medium">Total Fleet</p>
+                            <h3 class="text-3xl font-bold mt-2"><?php echo $total_fleet; ?></h3>
+                        </div>
+                        <div class="p-3 rounded-full bg-green-100 text-green-600">
+                            <i class="fas fa-id-card text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <span class="text-sm text-gray-500"></span>
+                    </div>
+                </div>
+
+                <!-- Total EV -->
+                <div class="glass-card p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 font-medium">Total EV Stations</p>
+                            <h3 class="text-3xl font-bold mt-2"><?php echo $total_ev; ?></h3>
+                        </div>
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <i class="fas fa-charging-station text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <span class="text-sm text-gray-500"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promotion Countdowns -->
+            <div class="glass-card p-6 rounded-xl shadow-md mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Active Promotions Countdown</h2>
+                    <button class="text-indigo-600 hover:text-indigo-800">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                <div class="space-y-3">
+                    <?php foreach ($promotion_end_times as $promotion_id => $end_time):
+                        $current_time = new DateTime('now', new DateTimeZone('Asia/Phnom_Penh'));
+                        $end_time_obj = new DateTime($end_time);
+                        $is_active = $end_time_obj > $current_time;
+                    ?>
+                    <div class="flex items-center justify-between p-4 rounded-lg <?php echo $is_active ? 'bg-green-50 countdown-active' : 'bg-red-50'; ?>">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2 rounded-full <?php echo $is_active ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'; ?>">
+                                <i class="fas <?php echo $is_active ? 'fa-clock' : 'fa-exclamation-circle'; ?>"></i>
+                            </div>
+                            <span class="font-medium"><?php echo $promotion_id; ?></span>
+                        </div>
+                        <span class="<?php echo $is_active ? 'text-green-600 font-bold' : 'text-red-600'; ?>"
+                              data-end-time="<?php echo $end_time; ?>">
+                            <?php
+                                if ($is_active) {
+                                    $interval = $current_time->diff($end_time_obj);
+                                    echo $interval->format('%ad %hh %im %ss');
+                                } else {
+                                    echo "EXPIRED";
+                                }
+                            ?>
+                        </span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Promotion Distribution -->
+                <div class="glass-card p-6 rounded-xl shadow-md">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Promotion Distribution</h2>
+                    <div class="chart-container">
+                        <canvas id="promotionDistributionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Province Promotion Status -->
+                <div class="glass-card p-6 rounded-xl shadow-md">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Province Promotion Status</h2>
+                    <div class="chart-container">
+                        <canvas id="provincePromotionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
+</div>
 
     <script>
-        const ctx3 = document.getElementById('chart3').getContext('2d');
-        const ctx5 = document.getElementById('chart5').getContext('2d');
-
-        const promotionDistribution = <?php echo $promotion_distribution_json; ?>;
-        const promotionLabels = <?php echo $promotion_labels_json; ?>;
-        const provinceLabels = <?php echo $province_labels; ?>;
-        const provinceActiveCounts = <?php echo $province_active_counts; ?>;
-        const provinceExpiredCounts = <?php echo $province_expired_counts; ?>;
-
-        const chart3 = new Chart(ctx3, {
-            type: 'pie',
+        // Promotion Distribution Chart
+        const promotionDistributionCtx = document.getElementById('promotionDistributionChart').getContext('2d');
+        const promotionDistributionChart = new Chart(promotionDistributionCtx, {
+            type: 'doughnut',
             data: {
-                labels: promotionLabels,
+                labels: <?php echo $promotion_labels_json; ?>,
                 datasets: [{
-                    label: 'Promotion Distribution',
-                    data: promotionDistribution,
+                    data: <?php echo $promotion_distribution_json; ?>,
                     backgroundColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)'
+                        '#3a86ff',
+                        '#8338ec',
+                        '#ff006e',
+                        '#ffbe0b',
+                        '#fb5607',
+                        '#9b5de5'
                     ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)'
-                    ],
-                    borderWidth: 1
+                    borderWidth: 0,
                 }]
             },
             options: {
@@ -540,65 +487,84 @@ $province_expired_counts = json_encode(array_column($province_promotion_status, 
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'bottom'
+                        position: 'right',
                     },
-                    animation: {
-                        duration: 2000,
-                        easing: 'easeInOutBounce'
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
                     }
-                }
+                },
+                cutout: '70%',
             }
         });
 
-        const chart5 = new Chart(ctx5, {
+        // Province Promotion Chart
+        const provincePromotionCtx = document.getElementById('provincePromotionChart').getContext('2d');
+        const provincePromotionChart = new Chart(provincePromotionCtx, {
             type: 'bar',
             data: {
-                labels: provinceLabels,
-                datasets: [{
+                labels: <?php echo $province_labels; ?>,
+                datasets: [
+                    {
                         label: 'Active Promotions',
-                        data: provinceActiveCounts,
-                        backgroundColor: 'rgba(75, 192, 192, 1)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+                        data: <?php echo $province_active_counts; ?>,
+                        backgroundColor: '#3a86ff',
+                        borderRadius: 6,
                     },
                     {
                         label: 'Expired Promotions',
-                        data: provinceExpiredCounts,
-                        backgroundColor: 'rgba(255, 99, 132, 1)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1
+                        data: <?php echo $province_expired_counts; ?>,
+                        backgroundColor: '#ff006e',
+                        borderRadius: 6,
                     }
                 ]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        grid: {
+                            color: '#e5e7eb'
+                        }
                     }
                 },
                 plugins: {
                     legend: {
-                        display: true,
-                        position: 'bottom'
+                        position: 'top',
                     },
-                    animation: {
-                        duration: 2000,
-                        easing: 'easeInOutBounce'
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
                     }
                 }
             }
         });
 
+        // Update countdowns every second
         function updateCountdowns() {
-            const now = new Date().getTime();
-
-            document.querySelectorAll('.countdown-timer').forEach(timer => {
-                const endTime = new Date(timer.dataset.endTime).getTime();
+            document.querySelectorAll('[data-end-time]').forEach(element => {
+                const endTime = new Date(element.dataset.endTime).getTime();
+                const now = new Date().getTime();
                 const distance = endTime - now;
 
                 if (distance < 0) {
-                    timer.innerHTML = "EXPIRED";
-                    timer.style.color = 'red';
+                    element.textContent = "EXPIRED";
+                    element.classList.remove('text-green-600');
+                    element.classList.add('text-red-600');
                     return;
                 }
 
@@ -607,13 +573,11 @@ $province_expired_counts = json_encode(array_column($province_promotion_status, 
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                timer.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                element.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
             });
         }
 
         setInterval(updateCountdowns, 1000);
-        updateCountdowns(); // Initial call to display countdowns immediately
     </script>
 </body>
-
 </html>
