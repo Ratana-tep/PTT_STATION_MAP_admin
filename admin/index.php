@@ -150,6 +150,12 @@ foreach ($markers['STATION'] as $station) {
     if (isset($station['other_product']) && is_array($station['other_product']) && in_array('EV', $station['other_product'])) {
         $total_ev++;
     }
+	if (isset($station['other_product']) && is_array($station['other_product']) && in_array('Onion', $station['other_product'])) {
+		$total_onion++;
+	}
+	if (isset($station['description']) && is_array($station['description']) && in_array('Amazon', $station['description'])) {
+		$total_amazon++;
+	}
 }
 
 // Process data for expiration status
@@ -395,6 +401,49 @@ $province_expired_counts = json_encode(array_column($province_promotion_status, 
                         </div>
                         <div class="p-3 rounded-full bg-blue-100 text-blue-600">
                             <i class="fas fa-charging-station text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <span class="text-sm text-gray-500"></span>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 font-medium">Total Onion Stations</p>
+                            <h3 class="text-3xl font-bold mt-2"><?php echo $total_onion; ?></h3>
+                        </div>
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <i class="fas fa-car-battery text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <span class="text-sm text-gray-500"></span>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 font-medium">Total Amazon Stations</p>
+                            <h3 class="text-3xl font-bold mt-2"><?php echo $total_amazon; ?></h3>
+                        </div>
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <i class="fas fa-store text-xl"></i> <i class="fas fa-coffee text-xl ml-2"></i>
+
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <span class="text-sm text-gray-500"></span>
+                    </div>
+                </div>
+                                <div class="glass-card p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 font-medium">Total EV Stations</p>
+                            <h3 class="text-3xl font-bold mt-2"><?php echo $total_ev; ?></h3>
+                        </div>
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                           <i class="fas fa-store text-xl"></i> <span class="ml-2 text-xl font-bold">7-Eleven</span>
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-gray-100">

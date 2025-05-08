@@ -672,26 +672,30 @@ div>
 
 <script>
     // Mobile menu toggle functionality
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
         const sidebar = document.getElementById('sidebar');
+        if (mobileMenuToggle && sidebar) {
+            mobileMenuToggle.addEventListener('click', function () {
+                sidebar.classList.toggle('hidden');
+            });
 
-        mobileMenuToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('hidden');
-        });
-
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            const isClickInsideSidebar = sidebar.contains(event.target);
-            const isClickOnMenuToggle = mobileMenuToggle.contains(event.target);
-
-            if (!isClickInsideSidebar && !isClickOnMenuToggle && !sidebar.classList.contains('hidden') && window.innerWidth < 768) {
-                sidebar.classList.add('hidden');
-            }
-        });
+            document.addEventListener('click', function (event) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnMenuToggle = mobileMenuToggle.contains(event.target);
+                if (
+                    !isClickInsideSidebar &&
+                    !isClickOnMenuToggle &&
+                    !sidebar.classList.contains('hidden') &&
+                    window.innerWidth < 768
+                ) {
+                    sidebar.classList.add('hidden');
+                }
+            });
+        }
     });
 
-    // Initialize DataTable with responsive features
+    // Initialize DataTable
     $(document).ready(function () {
         $('#stations-table').DataTable({
             responsive: {
@@ -712,36 +716,27 @@ div>
                 "dataSrc": "STATION"
             },
             "columns": [
-{
-    "data": "id",
-    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm font-medium text-gray-900",
-    "width": "50px",
-    "responsivePriority": 2 // Lower priority, e.g., 2 (1 is highest)
-},
+                {
+                    "data": "id",
+                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                },
                 {
                     "data": null,
-                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap",
                     "render": function (data, type, row) {
                         return `<button class="btn-hover-effect bg-blue-100 text-blue-800 px-2 py-1 md:px-3 md:py-1 rounded-lg text-xs md:text-sm font-medium" onclick="viewLocation('${row.latitude}', '${row.longitude}')">
                                 <i class="fas fa-map-marker-alt mr-1"></i> View
                             </button>`;
                     }
                 },
-                {
-                    "data": "title",
-                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm text-gray-500"
-                },
+                { "data": "title", "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm text-gray-500" },
                 {
                     "data": "other_product",
-                    "className": "px-3 py-2 md:px-6 md:py-4 text-sm text-gray-500",
                     "render": function (data) {
                         if (!data || data.length === 0) return 'N/A';
-
                         const colorMap = {
                             'EV': 'bg-purple-100 text-purple-800',
                             'Onion': 'bg-orange-100 text-orange-800'
                         };
-
                         return data.map(item => {
                             const colorClass = colorMap[item] || 'bg-gray-100 text-gray-800';
                             return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colorClass} mr-1 mb-1">${item}</span>`;
@@ -750,16 +745,13 @@ div>
                 },
                 {
                     "data": "description",
-                    "className": "px-3 py-2 md:px-6 md:py-4 text-sm text-gray-500",
                     "render": function (data) {
                         if (!data || data.length === 0) return 'N/A';
-
                         const colorMap = {
                             'Amazon': 'bg-purple-100 text-purple-800',
                             '7-Eleven': 'bg-orange-100 text-orange-800',
                             'Otr': 'bg-teal-100 text-teal-800'
                         };
-
                         return data.map(item => {
                             const colorClass = colorMap[item] || 'bg-gray-100 text-gray-800';
                             return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colorClass} mr-1 mb-1">${item}</span>`;
@@ -768,29 +760,22 @@ div>
                 },
                 {
                     "data": "service",
-                    "className": "px-3 py-2 md:px-6 md:py-4 text-sm text-gray-500",
                     "render": function (data) {
                         if (!data || data.length === 0) return 'N/A';
-
                         const colorMap = {
                             'Fleet card': 'bg-indigo-100 text-indigo-800',
                             'KHQR': 'bg-green-100 text-green-800',
                             'Cash': 'bg-yellow-100 text-yellow-800'
                         };
-
                         return data.map(item => {
                             const colorClass = colorMap[item] || 'bg-gray-100 text-gray-800';
                             return `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${colorClass} mr-1 mb-1">${item}</span>`;
                         }).join('');
                     }
                 },
-                {
-                    "data": "province",
-                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm text-gray-500"
-                },
+                { "data": "province", "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm text-gray-500" },
                 {
                     "data": "status",
-                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap",
                     "render": function (data) {
                         if (data === '16h') return '<span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">16 Hours</span>';
                         if (data === '24h') return '<span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">24 Hours</span>';
@@ -800,7 +785,6 @@ div>
                 },
                 {
                     "data": "picture",
-                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm text-gray-500",
                     "render": function (data) {
                         if (data) {
                             return `<a href="#" class="marker-image-link" data-bs-toggle="modal" data-bs-target="#imagePreviewModal" data-image="pictures/${data}">
@@ -813,7 +797,6 @@ div>
                 },
                 {
                     "data": null,
-                    "className": "px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-sm font-medium",
                     "render": function (data, type, row) {
                         return `<div class="flex space-x-1 md:space-x-2">
                                 <button class="btn-hover-effect bg-red-100 text-red-600 px-2 py-1 md:px-3 md:py-1 rounded-lg text-xs md:text-sm font-medium" onclick="deleteStation(${row.id})">
@@ -848,14 +831,11 @@ div>
             "pageLength": 10,
             "order": [[0, "asc"]],
             "initComplete": function () {
-                // Add custom styling to search box
                 $('.dataTables_filter input').addClass('border border-gray-300 rounded-lg px-3 py-1.5 md:px-4 md:py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm');
                 $('.dataTables_filter label').contents().filter(function () {
                     return this.nodeType === 3;
                 }).remove();
                 $('.dataTables_filter label').prepend('<i class="fas fa-search mr-2 text-gray-400"></i>');
-
-                // Add custom styling to length menu
                 $('.dataTables_length select').addClass('border border-gray-300 rounded-lg px-3 py-1.5 md:px-4 md:py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm');
             }
         });
@@ -868,15 +848,11 @@ div>
                 method: 'DELETE'
             })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
+                    if (!response.ok) throw new Error('Network response was not ok');
                     return response.json();
                 })
                 .then(data => {
-                    // Refresh the DataTable
                     $('#stations-table').DataTable().ajax.reload();
-                    // Show success message
                     showAlert('Station deleted successfully!', 'success');
                 })
                 .catch(error => {
@@ -893,8 +869,6 @@ div>
             .then(data => {
                 if (data && data.STATION.length > 0) {
                     const station = data.STATION[0];
-
-                    // Populate basic fields
                     document.getElementById('edit-id').value = station.id;
                     document.getElementById('edit-title').value = station.title;
                     document.getElementById('edit-province').value = station.province;
@@ -903,60 +877,38 @@ div>
                     document.getElementById('edit-address').value = station.address;
                     document.getElementById('edit-status').value = station.status;
                     document.getElementById('old-picture').value = station.picture || '';
-
-                    // Show current image if exists
                     if (station.picture) {
-                        document.getElementById('current-image').innerHTML = `
-                                <span class="text-green-600">Current image:</span> ${station.picture}
-                            `;
+                        document.getElementById('current-image').innerHTML = `<span class="text-green-600">Current image:</span> ${station.picture}`;
                     } else {
-                        document.getElementById('current-image').innerHTML = `
-                                <span class="text-gray-500">No image uploaded</span>
-                            `;
+                        document.getElementById('current-image').innerHTML = `<span class="text-gray-500">No image uploaded</span>`;
                     }
 
-                    // Reset all checkboxes
-                    document.querySelectorAll('#edit-station-form input[type="checkbox"]').forEach(checkbox => {
-                        checkbox.checked = false;
+                    document.querySelectorAll('#edit-station-form input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+
+                    if (station.product) station.product.forEach(product => {
+                        const cb = document.querySelector(`#edit-station-form input[name="product[]"][value="${product}"]`);
+                        if (cb) cb.checked = true;
                     });
 
-                    // Check product checkboxes
-                    if (station.product) {
-                        station.product.forEach(product => {
-                            const checkbox = document.querySelector(`#edit-station-form input[name="product[]"][value="${product}"]`);
-                            if (checkbox) checkbox.checked = true;
-                        });
-                    }
+                    if (station.other_product) station.other_product.forEach(product => {
+                        const cb = document.querySelector(`#edit-station-form input[name="other_product[]"][value="${product}"]`);
+                        if (cb) cb.checked = true;
+                    });
 
-                    // Check other product checkboxes
-                    if (station.other_product) {
-                        station.other_product.forEach(product => {
-                            const checkbox = document.querySelector(`#edit-station-form input[name="other_product[]"][value="${product}"]`);
-                            if (checkbox) checkbox.checked = true;
-                        });
-                    }
+                    if (station.description) station.description.forEach(service => {
+                        const cb = document.querySelector(`#edit-station-form input[name="description[]"][value="${service}"]`);
+                        if (cb) cb.checked = true;
+                    });
 
-                    // Check service checkboxes
-                    if (station.description) {
-                        station.description.forEach(service => {
-                            const checkbox = document.querySelector(`#edit-station-form input[name="description[]"][value="${service}"]`);
-                            if (checkbox) checkbox.checked = true;
-                        });
-                    }
+                    if (station.service) station.service.forEach(payment => {
+                        const cb = document.querySelector(`#edit-station-form input[name="service[]"][value="${payment}"]`);
+                        if (cb) cb.checked = true;
+                    });
 
-                    // Check payment method checkboxes
-                    if (station.service) {
-                        station.service.forEach(payment => {
-                            const checkbox = document.querySelector(`#edit-station-form input[name="service[]"][value="${payment}"]`);
-                            if (checkbox) checkbox.checked = true;
-                        });
-                    }
-
-                    // Initialize the modal
-                    const editModal = new bootstrap.Modal(document.getElementById('editStationModal'));
+                    const editModalEl = document.getElementById('editStationModal');
+                    const editModal = bootstrap.Modal.getInstance(editModalEl) || new bootstrap.Modal(editModalEl);
                     editModal.show();
                 } else {
-                    console.error('No data found for the specified ID.');
                     showAlert('Station data not found.', 'error');
                 }
             })
@@ -971,17 +923,13 @@ div>
         const alert = document.createElement('div');
         alert.className = `fixed top-4 right-4 z-50 px-4 py-3 md:px-6 md:py-4 rounded-lg shadow-lg text-white font-medium ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
         alert.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
-                    <span>${message}</span>
-                </div>
-            `;
+            <div class="flex items-center">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+                <span>${message}</span>
+            </div>
+        `;
         document.body.appendChild(alert);
-
-        // Remove alert after 3 seconds
-        setTimeout(() => {
-            alert.remove();
-        }, 3000);
+        setTimeout(() => alert.remove(), 3000);
     }
 
     // Handle image preview in modal
@@ -1001,28 +949,26 @@ div>
             "Pailin", "Preah Sihanouk", "Preah Vihear", "Pursat", "Ratanakiri", "Siem Reap", "Prey Veng",
             "Stung Treng", "Svay Rieng", "Takéo", "Kep", "Otdar Meanchey", "Pursat"
         ];
-
-        const dropdowns = ['province', 'edit-province'];
-
-        dropdowns.forEach(dropdownId => {
+        ['province', 'edit-province'].forEach(dropdownId => {
             const dropdown = document.getElementById(dropdownId);
-            provinces.forEach(province => {
-                const option = document.createElement('option');
-                option.value = province;
-                option.textContent = province;
-                dropdown.appendChild(option);
-            });
+            if (dropdown) {
+                provinces.forEach(province => {
+                    const option = document.createElement('option');
+                    option.value = province;
+                    option.textContent = province;
+                    dropdown.appendChild(option);
+                });
+            }
         });
     }
 
-    // Initialize province dropdowns when page loads
     document.addEventListener('DOMContentLoaded', populateProvinceDropdowns);
 
-    // Configuration object for easy customization
+    // Map Config
     const mapConfig = {
         apiKey: 'AIzaSyBWfYa4jsQg-YtPDdFYPLLDDBDiqRvr3d8',
         defaultZoom: 15,
-        fallbackMapLink: 'https://www.google.com/maps',
+        fallbackMapLink: 'https://www.google.com/maps ',
         loadingMessage: 'Loading map...',
         errorMessages: {
             elementNotFound: 'Map components not available',
@@ -1031,237 +977,93 @@ div>
         }
     };
 
-    // Global state
     const mapState = {
         initialized: false,
-        currentModal: null,
         map: null,
         marker: null
     };
 
-    // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', function () {
         setupMapModal();
         loadGoogleMaps();
     });
 
-    // Set up modal with flexible element detection
     function setupMapModal() {
-        // Try to get elements with fallbacks
-        const modalEl = getElementWithFallback('locationPreviewModal', () => {
-            console.warn('Modal element not found, creating fallback');
-            return createFallbackModal();
-        });
-
-        // Set up modal events if available
+        const modalEl = document.getElementById('locationPreviewModal');
         if (modalEl) {
             modalEl.addEventListener('shown.bs.modal', handleModalShown);
             modalEl.addEventListener('hidden.bs.modal', handleModalHidden);
         }
-
-        // Set up buttons with existence checks
-        setupButton('retry-load-map', handleRetryClick);
-        setupButton('open-google-maps', handleOpenInMapsClick);
     }
 
-    // Flexible element getter with fallback
-    function getElementWithFallback(id, fallbackFn) {
-        const el = document.getElementById(id);
-        if (!el && fallbackFn) {
-            return fallbackFn();
-        }
-        return el;
-    }
-
-    // Create a simple fallback modal if needed
-    function createFallbackModal() {
-        const modal = document.createElement('div');
-        modal.className = 'fallback-modal';
-        modal.innerHTML = `
-    <div class="modal-content">
-      <div id="fallback-location-info"></div>
-      <div id="fallback-map-container">
-        <p>${mapConfig.errorMessages.elementNotFound}</p>
-        <a id="fallback-map-link" href="#" target="_blank">View in Google Maps</a>
-      </div>
-    </div>
-  `;
-        document.body.appendChild(modal);
-        return modal;
-    }
-
-    // Handle modal shown event
     function handleModalShown() {
-        const coordsEl = getElementWithFallback('location-coordinates');
+        const coordsEl = document.getElementById('location-coordinates');
         if (coordsEl && coordsEl.textContent) {
             const [lat, lng] = parseCoordinates(coordsEl.textContent);
-            if (lat && lng) {
-                initMap(lat, lng);
-            }
+            if (lat && lng) initMap(lat, lng);
         }
     }
 
-    // Handle modal hidden event
     function handleModalHidden() {
         cleanUpMap();
+
+        // Restore scroll
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
     }
 
-    // Set up button with existence check
-    function setupButton(id, handler) {
-        const btn = document.getElementById(id);
-        if (btn) {
-            btn.addEventListener('click', handler);
-        }
-    }
-
-    // View location - main entry point
     function viewLocation(latitude, longitude) {
         try {
-            // Safely handle coordinates
             const lat = parseFloat(latitude);
             const lng = parseFloat(longitude);
+            if (isNaN(lat) || isNaN(lng)) throw new Error(mapConfig.errorMessages.invalidCoords);
 
-            if (isNaN(lat) || isNaN(lng)) {
-                throw new Error(mapConfig.errorMessages.invalidCoords);
+            const coordsEl = document.getElementById('location-coordinates');
+            const modalEl = document.getElementById('locationPreviewModal');
+
+            if (coordsEl && modalEl) {
+                coordsEl.textContent = `Latitude: ${lat}, Longitude: ${lng}`;
+                const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                modal.show();
+            } else {
+                fallbackLocationDisplay(lat, lng);
             }
-
-            // Try standard modal flow first
-            if (tryStandardModalFlow(lat, lng)) {
-                return;
-            }
-
-            // Fallback to simple display
-            fallbackLocationDisplay(lat, lng);
-
         } catch (error) {
-            console.error('Location view error:', error);
-            showUserMessage(error.message || 'Failed to show location');
+            showUserMessage(error.message, 'error');
         }
     }
 
-    // Try standard modal flow
-    function tryStandardModalFlow(lat, lng) {
-        const coordsEl = getElementWithFallback('location-coordinates');
-        const modalEl = getElementWithFallback('locationPreviewModal');
-
-        if (!coordsEl || !modalEl) {
-            return false;
-        }
-
-        // Update coordinates
-        coordsEl.textContent = `Latitude: ${lat}, Longitude: ${lng}`;
-
-        // Show loading state if elements exist
-        const loadingEl = document.getElementById('map-loading');
-        const errorEl = document.getElementById('map-error');
-        if (loadingEl) loadingEl.classList.remove('hidden');
-        if (errorEl) errorEl.classList.add('hidden');
-
-        // Show modal
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
-
-        return true;
-    }
-
-    // Fallback display when modal isn't available
-    function fallbackLocationDisplay(lat, lng) {
-        // Try to find or create fallback elements
-        const container = getElementWithFallback('fallback-map-container', () => {
-            const div = document.createElement('div');
-            div.id = 'fallback-map-container';
-            document.body.appendChild(div);
-            return div;
-        });
-
-        const link = getElementWithFallback('fallback-map-link', () => {
-            const a = document.createElement('a');
-            a.id = 'fallback-map-link';
-            a.target = '_blank';
-            container.appendChild(a);
-            return a;
-        });
-
-        const info = getElementWithFallback('fallback-location-info', () => {
-            const div = document.createElement('div');
-            div.id = 'fallback-location-info';
-            container.prepend(div);
-            return div;
-        });
-
-        // Update content
-        info.textContent = `Location: ${lat}, ${lng}`;
-        link.href = `${mapConfig.fallbackMapLink}?q=${lat},${lng}`;
-        link.textContent = 'Open in Google Maps';
-
-        // Show to user
-        showUserMessage(`Location: ${lat}, ${lng} - Click below to view in Google Maps`, 'info');
-    }
-
-    // Load Google Maps API
-    function loadGoogleMaps() {
-        if (window.google && google.maps) return;
-
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${mapConfig.apiKey}&callback=handleMapsApiLoaded`;
-        script.async = true;
-        script.defer = true;
-        script.onerror = handleMapsApiError;
-        document.head.appendChild(script);
-    }
-
-    // Handle successful API load
-    function handleMapsApiLoaded() {
-        console.log('Google Maps API loaded');
-        // Ready for map initialization
-    }
-
-    // Handle API load error
-    function handleMapsApiError() {
-        console.error('Failed to load Google Maps API');
-        showUserMessage(mapConfig.errorMessages.apiFailed, 'error');
-    }
-
-    // Initialize map with flexible approach
     function initMap(latitude, longitude) {
         try {
-            const mapContainer = getElementWithFallback('map-container');
-            if (!mapContainer) {
-                throw new Error('Map container not available');
-            }
+            const mapContainer = document.getElementById('map-container');
+            if (!mapContainer) throw new Error('Map container not available');
 
-            // Wait for container to be visible
             if (mapContainer.offsetWidth === 0 || mapContainer.offsetHeight === 0) {
                 setTimeout(() => initMap(latitude, longitude), 100);
                 return;
             }
 
-            // Create map
             mapState.map = new google.maps.Map(mapContainer, {
-                center: {lat: latitude, lng: longitude},
+                center: { lat: latitude, lng: longitude },
                 zoom: mapConfig.defaultZoom
             });
 
-            // Add marker
             mapState.marker = new google.maps.Marker({
-                position: {lat: latitude, lng: longitude},
+                position: { lat: latitude, lng: longitude },
                 map: mapState.map,
                 title: 'Station Location'
             });
 
-            // Update UI
             const loadingEl = document.getElementById('map-loading');
             if (loadingEl) loadingEl.classList.add('hidden');
 
             mapState.initialized = true;
-
         } catch (error) {
             console.error('Map init error:', error);
             showMapError(error.message || mapConfig.errorMessages.apiFailed);
         }
     }
 
-    // Clean up map resources
     function cleanUpMap() {
         if (mapState.marker) {
             mapState.marker.setMap(null);
@@ -1271,27 +1073,21 @@ div>
         mapState.initialized = false;
     }
 
-    // Show error in map container
     function showMapError(message) {
-        const errorEl = getElementWithFallback('map-error');
-        const messageEl = getElementWithFallback('map-error-message');
-        const loadingEl = getElementWithFallback('map-loading');
-
+        const errorEl = document.getElementById('map-error');
+        const messageEl = document.getElementById('map-error-message');
+        const loadingEl = document.getElementById('map-loading');
         if (errorEl) errorEl.classList.remove('hidden');
         if (messageEl) messageEl.textContent = message;
         if (loadingEl) loadingEl.classList.add('hidden');
     }
 
-    // Show user message (toast/alert)
     function showUserMessage(message, type = 'error') {
-        // Implement your preferred user notification method
-        console.log(`${type}: ${message}`);
         alert(`${type.toUpperCase()}: ${message}`);
     }
 
-    // Button handlers
     function handleRetryClick() {
-        const coordsEl = getElementWithFallback('location-coordinates');
+        const coordsEl = document.getElementById('location-coordinates');
         if (coordsEl && coordsEl.textContent) {
             const [lat, lng] = parseCoordinates(coordsEl.textContent);
             initMap(lat, lng);
@@ -1299,49 +1095,66 @@ div>
     }
 
     function handleOpenInMapsClick() {
-        const coordsEl = getElementWithFallback('location-coordinates');
+        const coordsEl = document.getElementById('location-coordinates');
         if (coordsEl && coordsEl.textContent) {
             const [lat, lng] = parseCoordinates(coordsEl.textContent);
             window.open(`${mapConfig.fallbackMapLink}?q=${lat},${lng}`, '_blank');
         }
     }
 
-    // Parse coordinates from text
     function parseCoordinates(text) {
         try {
             const lat = parseFloat(text.split('Latitude: ')[1].split(',')[0]);
             const lng = parseFloat(text.split('Longitude: ')[1]);
             return [lat, lng];
         } catch (e) {
-            console.error('Coordinate parsing error:', e);
             return [null, null];
         }
     }
-    document.addEventListener('DOMContentLoaded', function() {
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  const menuButton = document.getElementById('mobile-menu-button');
 
-  // Toggle sidebar
-  menuButton.addEventListener('click', function() {
-    sidebar.classList.toggle('-translate-x-full');
-    overlay.classList.toggle('hidden');
-  });
-
-  // Close sidebar when clicking overlay
-  overlay.addEventListener('click', function() {
-    sidebar.classList.add('-translate-x-full');
-    overlay.classList.add('hidden');
-  });
-
-  // Auto-close on desktop
-  window.addEventListener('resize', function() {
-    if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
-      sidebar.classList.remove('-translate-x-full');
-      overlay.classList.add('hidden');
+    function loadGoogleMaps() {
+        if (window.google && google.maps) return;
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key= ${mapConfig.apiKey}&callback=handleMapsApiLoaded`;
+        script.async = true;
+        script.defer = true;
+        script.onerror = handleMapsApiError;
+        document.head.appendChild(script);
     }
-  });
-})
+
+    function handleMapsApiLoaded() {
+        console.log('Google Maps API loaded');
+    }
+
+    function handleMapsApiError() {
+        console.error('Failed to load Google Maps API');
+        showUserMessage(mapConfig.errorMessages.apiFailed, 'error');
+    }
+
+    // Sidebar Toggle
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const menuButton = document.getElementById('mobile-menu-button');
+        if (menuButton && sidebar && overlay) {
+            menuButton.addEventListener('click', function () {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            });
+
+            overlay.addEventListener('click', function () {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 768) {
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
+            });
+        }
+    });
 </script>
 </body>
 </html>

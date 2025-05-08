@@ -5551,22 +5551,6 @@
             "promotion": [],
             "old_picture": "",
             "picture": "2.png"
-        },
-        {
-            "id": "aaaaa",
-            "latitude": "1111111",
-            "longitude": "11111",
-            "title": "test",
-            "description": null,
-            "product": null,
-            "other_product": null,
-            "service": null,
-            "province": "Battambang",
-            "address": "tse",
-            "status": "under construct",
-            "promotion": null,
-            "old_picture": "",
-            "picture": "banner-1-removebg-preview.png"
         }
     ]
 }
