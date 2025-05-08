@@ -156,6 +156,9 @@ foreach ($markers['STATION'] as $station) {
 	if (isset($station['description']) && is_array($station['description']) && in_array('Amazon', $station['description'])) {
 		$total_amazon++;
 	}
+	if (isset($station['description']) && is_array($station['description']) && in_array('7-Eleven', $station['description'])) {
+		$total_7evleven++;
+	}
 }
 
 // Process data for expiration status
@@ -439,8 +442,8 @@ $province_expired_counts = json_encode(array_column($province_promotion_status, 
                                 <div class="glass-card p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
                     <div class="flex justify-between items-start">
                         <div>
-                            <p class="text-gray-500 font-medium">Total EV Stations</p>
-                            <h3 class="text-3xl font-bold mt-2"><?php echo $total_ev; ?></h3>
+                            <p class="text-gray-500 font-medium">Total 7-ELEVEN Stations</p>
+                            <h3 class="text-3xl font-bold mt-2"><?php echo $total_7evleven; ?></h3>
                         </div>
                         <div class="p-3 rounded-full bg-blue-100 text-blue-600">
                            <i class="fas fa-store text-xl"></i> <span class="ml-2 text-xl font-bold">7-Eleven</span>
